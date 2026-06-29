@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+.idea
+
+# Referencia de reglamentos y assets grandes (no subir al repo)
+attachments/
+*.pdf
