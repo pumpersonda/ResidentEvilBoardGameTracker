@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @import 'uniwind';
 /* ─── UniWind theme variants ─────────────────────────────────────
    Switched at runtime via Uniwind.setTheme('light' | 'dark' | 'adaptive').

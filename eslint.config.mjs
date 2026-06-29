@@ -5,17 +5,17 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
-    js.configs.recommended,
-    ...tseslint.configs.recommended,
-    {
-        files: ['**/*.{js,jsx,ts,tsx}'],
-        plugins: {
-            'react-hooks': reactHooks,
-        },
-        rules: {
-            ...reactHooks.configs.recommended.rules,
-            '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-        },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    plugins: {
+      'react-hooks': reactHooks,
     },
-    prettier,
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    },
+  },
+  prettier
 );

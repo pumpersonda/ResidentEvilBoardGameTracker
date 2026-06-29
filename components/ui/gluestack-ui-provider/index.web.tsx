@@ -7,8 +7,7 @@ import { script } from './script';
 
 export type ModeType = 'light' | 'dark' | 'system';
 
-const useSafeLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+const useSafeLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export function GluestackUIProvider({
   mode = 'dark',
@@ -17,14 +16,11 @@ export function GluestackUIProvider({
   mode?: ModeType;
   children?: React.ReactNode;
 }) {
-  const handleMediaQuery = React.useCallback(
-    (e: MediaQueryListEvent) => {
-      const resolvedMode = e.matches ? 'dark' : 'light';
-      script(resolvedMode);
-      Uniwind.setTheme(resolvedMode);
-    },
-    []
-  );
+  const handleMediaQuery = React.useCallback((e: MediaQueryListEvent) => {
+    const resolvedMode = e.matches ? 'dark' : 'light';
+    script(resolvedMode);
+    Uniwind.setTheme(resolvedMode);
+  }, []);
 
   useSafeLayoutEffect(() => {
     if (mode === 'system') return;

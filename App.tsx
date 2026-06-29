@@ -9,7 +9,6 @@ import { Uniwind } from 'uniwind';
 
 export default function App() {
   return (
-    
     <SafeAreaListener
       onChange={({ insets }) => {
         Uniwind.updateInsets(insets);
@@ -18,13 +17,12 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <GluestackUIProvider mode="dark">
           <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+            <Text>Open up App.tsx to start working on your app!</Text>
+            <StatusBar style="auto" />
+          </View>
         </GluestackUIProvider>
       </GestureHandlerRootView>
     </SafeAreaListener>
-  
   );
 }
 
