@@ -17,10 +17,29 @@ export interface Player {
   realName: string;
 }
 
-export type HealthState = 'Fine' | 'Caution' | 'Danger' | 'Dead';
+export type HealthValue = 0 | 1 | 2 | 3 | 4 | 5;
 
-export interface HealthTrack {
-  current: HealthState;
+export const HEALTH_LABELS: Record<HealthValue, string> = {
+  5: 'Fine',
+  4: 'Fine',
+  3: 'Caution',
+  2: 'Caution',
+  1: 'Danger',
+  0: 'Dead',
+};
+
+export const HEALTH_COLORS: Record<HealthValue, string> = {
+  5: '#22c55e',
+  4: '#4ade80',
+  3: '#eab308',
+  2: '#f59e0b',
+  1: '#ef4444',
+  0: '#111827',
+};
+
+export interface CharacterHealth {
+  value: HealthValue; // 5 = Fine (max), 0 = Dead
+  isPoisoned: boolean;
 }
 
 export type ItemCategory = 'Weapon' | 'Herb' | 'Ammo' | 'Key' | 'Tool' | 'Other';
@@ -35,7 +54,7 @@ export interface Item {
 export interface ActiveCharacter {
   character: Character;
   controlledBy: Player;
-  health: HealthTrack;
+  health: CharacterHealth;
   inventory: Item[];
   kerosene?: number; // RE1
 }
@@ -67,6 +86,7 @@ export interface Campaign {
   reserveCharacters: Character[];
   itemsBox: Item[];
   handCards: Card[];
+  addedCards: Partial<Record<CardType, Card[]>>;
   discardedCards: Partial<Record<CardType, Card[]>>;
   scenarios: Scenario[];
   createdAt: string;
