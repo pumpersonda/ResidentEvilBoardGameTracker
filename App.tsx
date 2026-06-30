@@ -1,10 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaListener } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
 
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import AppNavigator from '@/components/navigation/AppNavigator';
 import '@/global.css';
-import { SafeAreaListener } from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Uniwind } from 'uniwind';
 
 export default function App() {
@@ -16,21 +16,11 @@ export default function App() {
     >
       <GestureHandlerRootView style={{ flex: 1 }}>
         <GluestackUIProvider mode="dark">
-          <View style={styles.container}>
-            <Text>Open up App.tsx to start working on your app!</Text>
-            <StatusBar style="auto" />
-          </View>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
         </GluestackUIProvider>
       </GestureHandlerRootView>
     </SafeAreaListener>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

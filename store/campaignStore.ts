@@ -8,7 +8,7 @@ import {
   CardType,
   Card,
   CharacterHealth,
-  ActiveCharacter,
+  ActiveCharacter, Theme,
 } from '@/types';
 
 interface CampaignStore {
@@ -52,7 +52,7 @@ export const useCampaignStore = create<CampaignStore>()(
   persist(
     (set, get) => ({
       currentCampaign: null,
-
+      currentTheme: null,
       setCurrentCampaign: campaign => set({ currentCampaign: campaign }),
 
       updateCampaign: updates =>
