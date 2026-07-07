@@ -5,6 +5,10 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
+  {
+    // Add the folders or files you want to ignore here
+    ignores: ['node_modules/', 'dist/', 'build/', 'components/ui/'],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

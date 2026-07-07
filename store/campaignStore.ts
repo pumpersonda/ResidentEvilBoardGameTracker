@@ -1,20 +1,22 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
+  ActiveCharacter,
   Campaign,
-  ScenarioStatus,
-  Item,
-  CardType,
   Card,
+  CardType,
   CharacterHealth,
-  ActiveCharacter, Theme,
+  Item,
+  ScenarioStatus,
 } from '@/types';
 
 interface CampaignStore {
   currentCampaign: Campaign | null;
+  allCampaigns: Campaign[];
 
   // Core actions
+  createCampaign(campaign: Partial<Campaign>): Campaign;
   setCurrentCampaign: (campaign: Campaign) => void;
   updateCampaign: (updates: Partial<Campaign>) => void;
   resetCampaign: () => void;
@@ -52,7 +54,11 @@ export const useCampaignStore = create<CampaignStore>()(
   persist(
     (set, get) => ({
       currentCampaign: null,
-      currentTheme: null,
+      allCampaigns: [],
+      createCampaign(campaign: Campaign) {
+        set(state => ({ allCampaigns: [...state.allCampaigns, campaign] }));
+        return campaign;
+      },
       setCurrentCampaign: campaign => set({ currentCampaign: campaign }),
 
       updateCampaign: updates =>

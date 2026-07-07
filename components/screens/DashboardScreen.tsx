@@ -1,25 +1,20 @@
-import React from 'react';
-import { ScrollView } from 'react-native';
-import { VStack, HStack, Text, Card, Pressable } from '@gluestack-ui/themed';
+import React, { useState } from 'react';
+import { Pressable, ScrollView } from 'react-native';
+import { VStack } from '@/components/ui/vstack';
+import { HStack } from '@/components/ui/hstack';
+import { Text } from '@/components/ui/text';
 import { Plus } from 'lucide-react-native';
 import CampaignCard from '@/components/campain/CampaignCard';
+import CreateCampaignModal from '@/components/screens/CreateCampaignModal';
+import { useCampaignStore } from '@/store/campaignStore';
 
 export default function DashboardScreen() {
-  // TODO: Replace with data from Zustand store
-  const campaigns: any[] = [
-    {
-      id: '1',
-      name: 'Main Campaign',
-      game: 'RE1',
-      difficulty: 'Normal',
-      dangerLevel: 4,
-      progress: '3/20',
-    },
-  ];
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const campaigns = useCampaignStore(state => state.allCampaigns);
+  const createCampaign = useCampaignStore(state => state.createCampaign);
 
   const handleCreateCampaign = () => {
-    // TODO: Open create campaign flow
-    console.log('Create new campaign');
+    setIsCreateModalOpen(true);
   };
 
   const handleOpenCampaign = (campaignId: string) => {
@@ -46,7 +41,6 @@ export default function DashboardScreen() {
                 game={campaign.game}
                 difficulty={campaign.difficulty}
                 dangerLevel={campaign.dangerLevel}
-                progress={campaign.progress}
                 onPress={handleOpenCampaign}
               />
             ))}
@@ -73,6 +67,11 @@ export default function DashboardScreen() {
       >
         <Plus color="white" size={26} />
       </Pressable>
+      <CreateCampaignModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreate={createCampaign}
+      />
     </VStack>
   );
 }
