@@ -7,264 +7,244 @@ import {
   Card,
   CardType,
   CharacterHealth,
+  GameVersion,
   Item,
   ScenarioStatus,
 } from '@/types';
+import { CreateCampaignForm } from '@/components/screens/CreateCampaignModal';
 
 interface CampaignStore {
-  currentCampaign: Campaign | null;
+  currentCampaignId: string | null;
   allCampaigns: Campaign[];
 
   // Core actions
-  createCampaign(campaign: Partial<Campaign>): Campaign;
-  setCurrentCampaign: (campaign: Campaign) => void;
+  createCampaign: (formData: CreateCampaignForm) => void;
+  setCurrentCampaignId: (campaignId: string | null) => void;
   updateCampaign: (updates: Partial<Campaign>) => void;
   resetCampaign: () => void;
 
-  // Specific fast actions (UX friendly)
-  /** Updates the campaign danger level. Used for quick threat adjustments during gameplay. */
+  // Fast gameplay actions
   setDangerLevel: (level: number) => void;
-  /** Changes a scenario's status (locked, unlocked, completed, failed). */
   updateScenarioStatus: (scenarioId: string, status: ScenarioStatus) => void;
-  /** Updates an active character's health state (e.g., damage taken, healing). */
   updateActiveCharacterHealth: (characterId: string, health: CharacterHealth) => void;
-  /** Adds a character to the active roster for the current campaign. */
   addActiveCharacter: (activeCharacter: ActiveCharacter) => void;
-  /** Removes a character from the active roster entirely. */
   removeActiveCharacter: (characterId: string) => void;
-  /** Moves a character from active roster to reserve pool (e.g., after death or removal from scenario). */
   moveCharacterToReserve: (characterId: string) => void;
-  /** Adds an item to a character's inventory (fast append without replacement logic). */
   addItemToActiveCharacter: (characterId: string, item: Item) => void;
-  /** Removes a specific item from a character's inventory by its ID. */
-  removeItemFromActiveCharacter: (characterId: string, item: Item) => void;
-  /** Updates or adds an item in a character's inventory. Replaces if exists by ID, appends otherwise. */
+  removeItemFromActiveCharacter: (characterId: string, itemId: string) => void;
   updateActiveCharacterInventory: (characterId: string, item: Item) => void;
-  /** Clears all items from a character's inventory (reset to empty state). */
   resetActiveCharacterInventory: (characterId: string) => void;
-  /** Adds an item to the shared Item Box (common pool accessible to all characters). */
   addItemToBox: (item: Item) => void;
-  /** Records a card that was added from the deck to game state for tracking. */
   addedCard: (cardType: CardType, card: Card) => void;
-  /** Moves a card to the discard pile for a specific card type (tension, narrative, equipment, etc.). */
   discardCard: (cardType: CardType, card: Card) => void;
 }
 
 export const useCampaignStore = create<CampaignStore>()(
   persist(
-    (set, get) => ({
-      currentCampaign: null,
+    set => ({
+      currentCampaignId: null,
       allCampaigns: [],
-      createCampaign(campaign: Campaign) {
-        set(state => ({ allCampaigns: [...state.allCampaigns, campaign] }));
-        return campaign;
-      },
-      setCurrentCampaign: campaign => set({ currentCampaign: campaign }),
+
+      createCampaign: formData =>
+        set(state => {
+          // Generate a unique ID and append all starting campaign defaults
+          const newCampaign: Campaign = {
+            id: Math.random().toString(36).substring(2, 9), // Simple local ID
+            name: formData.name,
+            game: formData.gameVersion as GameVersion,
+            difficulty: formData.difficulty,
+            dangerLevel: 0, // Starts at zero threat
+            activeCharacters: [], // Empty roster at the beginning
+            reserveCharacters: [],
+            itemsBox: [], // Inventory box starts empty
+            scenarios: [], // TODO: Load initial scenarios based on the game version
+            discardedCards: {},
+            addedCards: {},
+            handCards: [],
+            createdAt: new Date().toISOString(),
+          };
+
+          return {
+            allCampaigns: [...state.allCampaigns, newCampaign],
+            currentCampaignId: newCampaign.id,
+          };
+        }),
+
+      setCurrentCampaignId: campaignId => set({ currentCampaignId: campaignId }),
 
       updateCampaign: updates =>
         set(state => ({
-          currentCampaign: state.currentCampaign ? { ...state.currentCampaign, ...updates } : null,
+          allCampaigns: state.allCampaigns.map(c =>
+            c.id === state.currentCampaignId ? { ...c, ...updates } : c
+          ),
         })),
 
-      resetCampaign: () => set({ currentCampaign: null }),
+      resetCampaign: () => set({ currentCampaignId: null }),
 
       setDangerLevel: level =>
         set(state => ({
-          currentCampaign: state.currentCampaign
-            ? { ...state.currentCampaign, dangerLevel: level }
-            : null,
+          allCampaigns: state.allCampaigns.map(c =>
+            c.id === state.currentCampaignId ? { ...c, dangerLevel: level } : c
+          ),
         })),
 
-      updateScenarioStatus: (scenarioId: string, status: ScenarioStatus) =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
+      updateScenarioStatus: (scenarioId, status) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              scenarios: c.scenarios.map(s => (s.id === scenarioId ? { ...s, status } : s)),
+            };
+          }),
+        })),
 
-          return {
-            currentCampaign: {
-              ...campaign,
-              scenarios: campaign.scenarios.map(s => (s.id === scenarioId ? { ...s, status } : s)),
-            },
-          };
-        }),
-
-      updateActiveCharacterHealth: (characterId: string, newHealth: CharacterHealth) =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
-
-          return {
-            currentCampaign: {
-              ...campaign,
-              activeCharacters: campaign.activeCharacters.map(ac =>
+      updateActiveCharacterHealth: (characterId, newHealth) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.map(ac =>
                 ac.character.id === characterId ? { ...ac, health: newHealth } : ac
               ),
-            },
-          };
-        }),
-      addActiveCharacter: activeCharacter =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
+            };
+          }),
+        })),
 
-          return {
-            currentCampaign: {
-              ...campaign,
-              activeCharacters: [...campaign.activeCharacters, activeCharacter],
-            },
-          };
-        }),
+      addActiveCharacter: activeCharacter =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: [...c.activeCharacters, activeCharacter],
+            };
+          }),
+        })),
 
       removeActiveCharacter: characterId =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
-
-          return {
-            currentCampaign: {
-              ...campaign,
-              activeCharacters: campaign.activeCharacters.filter(
-                ac => ac.character.id !== characterId
-              ),
-            },
-          };
-        }),
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.filter(ac => ac.character.id !== characterId),
+            };
+          }),
+        })),
 
       moveCharacterToReserve: characterId =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const characterToMove = c.activeCharacters.find(ac => ac.character.id === characterId);
+            if (!characterToMove) return c;
 
-          const characterToMove = campaign.activeCharacters.find(
-            ac => ac.character.id === characterId
-          );
-          if (!characterToMove) return state;
-
-          return {
-            currentCampaign: {
-              ...campaign,
-              activeCharacters: campaign.activeCharacters.filter(
-                ac => ac.character.id !== characterId
-              ),
-              reserveCharacters: [...campaign.reserveCharacters, characterToMove.character],
-            },
-          };
-        }),
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.filter(ac => ac.character.id !== characterId),
+              reserveCharacters: [...c.reserveCharacters, characterToMove.character],
+            };
+          }),
+        })),
 
       addItemToActiveCharacter: (characterId, item) =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
-
-          return {
-            currentCampaign: {
-              ...campaign,
-              activeCharacters: campaign.activeCharacters.map(ac =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.map(ac =>
                 ac.character.id === characterId ? { ...ac, inventory: [...ac.inventory, item] } : ac
               ),
-            },
-          };
-        }),
+            };
+          }),
+        })),
 
-      addItemToBox: item =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
-
-          return {
-            currentCampaign: {
-              ...campaign,
-              itemsBox: [...campaign.itemsBox, item],
-            },
-          };
-        }),
-
-      discardCard: (cardType: CardType, card: Card) =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
-
-          const currentDiscarded = campaign.discardedCards[cardType] || [];
-
-          return {
-            currentCampaign: {
-              ...campaign,
-              discardedCards: {
-                ...campaign.discardedCards,
-                [cardType]: [...currentDiscarded, card],
-              },
-            },
-          };
-        }),
-      addedCard: (cardType: CardType, card: Card) =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
-
-          const currentDiscarded = campaign.addedCards[cardType] || [];
-
-          return {
-            currentCampaign: {
-              ...campaign,
-              addedCards: {
-                ...campaign.addedCards,
-                [cardType]: [...currentDiscarded, card],
-              },
-            },
-          };
-        }),
-      removeItemFromActiveCharacter: (characterId: string, item: Item) =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
-
-          return {
-            currentCampaign: {
-              ...campaign,
-              activeCharacters: campaign.activeCharacters.map(ac =>
+      removeItemFromActiveCharacter: (characterId, itemId) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.map(ac =>
                 ac.character.id === characterId
-                  ? {
-                      ...ac,
-                      inventory: ac.inventory.filter(invItem => invItem.id !== item.id),
-                    }
+                  ? { ...ac, inventory: ac.inventory.filter(i => i.id !== itemId) }
                   : ac
               ),
-            },
-          };
-        }),
-      resetActiveCharacterInventory: (characterId: string) =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
+            };
+          }),
+        })),
 
-          return {
-            currentCampaign: {
-              ...campaign,
-              activeCharacters: campaign.activeCharacters.map(ac =>
+      updateActiveCharacterInventory: (characterId, item) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.map(ac => {
+                if (ac.character.id !== characterId) return ac;
+                const itemExists = ac.inventory.some(i => i.id === item.id);
+                const newInventory = itemExists
+                  ? ac.inventory.map(i => (i.id === item.id ? item : i))
+                  : [...ac.inventory, item];
+                return { ...ac, inventory: newInventory };
+              }),
+            };
+          }),
+        })),
+
+      resetActiveCharacterInventory: characterId =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.map(ac =>
                 ac.character.id === characterId ? { ...ac, inventory: [] } : ac
               ),
-            },
-          };
-        }),
-      updateActiveCharacterInventory: (characterId: string, item: Item) =>
-        set(state => {
-          const campaign = state.currentCampaign;
-          if (!campaign) return state;
+            };
+          }),
+        })),
 
-          return {
-            currentCampaign: {
-              ...campaign,
-              activeCharacters: campaign.activeCharacters.map(ac =>
-                ac.character.id === characterId
-                  ? {
-                      ...ac,
-                      inventory: [...ac.inventory, item],
-                    }
-                  : ac
-              ),
-            },
-          };
-        }),
+      addItemToBox: item =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return { ...c, itemsBox: [...c.itemsBox, item] };
+          }),
+        })),
+
+      discardCard: (cardType, card) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const currentDiscarded = c.discardedCards[cardType] || [];
+            return {
+              ...c,
+              discardedCards: {
+                ...c.discardedCards,
+                [cardType]: [...currentDiscarded, card],
+              },
+            };
+          }),
+        })),
+
+      addedCard: (cardType, card) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const currentAdded = c.addedCards[cardType] || [];
+            return {
+              ...c,
+              addedCards: {
+                ...c.addedCards,
+                [cardType]: [...currentAdded, card],
+              },
+            };
+          }),
+        })),
     }),
     {
       name: 're-campaign-store',
@@ -272,3 +252,10 @@ export const useCampaignStore = create<CampaignStore>()(
     }
   )
 );
+
+// Custom helper hook for easy consumption inside components
+export const useCurrentCampaign = (): Campaign | null => {
+  const allCampaigns = useCampaignStore(state => state.allCampaigns);
+  const currentCampaignId = useCampaignStore(state => state.currentCampaignId);
+  return allCampaigns.find(c => c.id === currentCampaignId) || null;
+};

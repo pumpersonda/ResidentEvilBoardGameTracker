@@ -7,19 +7,24 @@ import { Plus } from 'lucide-react-native';
 import CampaignCard from '@/components/campain/CampaignCard';
 import CreateCampaignModal from '@/components/screens/CreateCampaignModal';
 import { useCampaignStore } from '@/store/campaignStore';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/components/navigation/types';
 
 export default function DashboardScreen() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const campaigns = useCampaignStore(state => state.allCampaigns);
   const createCampaign = useCampaignStore(state => state.createCampaign);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const setCurrentCampaignId = useCampaignStore(state => state.setCurrentCampaignId);
 
   const handleCreateCampaign = () => {
     setIsCreateModalOpen(true);
   };
 
   const handleOpenCampaign = (campaignId: string) => {
-    // TODO: Navigate to campaign detail
-    console.log('Open campaign:', campaignId);
+    setCurrentCampaignId(campaignId);
+    navigation.navigate('CurrentCampaign');
   };
 
   return (

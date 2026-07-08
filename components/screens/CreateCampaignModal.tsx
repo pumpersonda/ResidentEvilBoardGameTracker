@@ -43,7 +43,7 @@ const createCampaignSchema = z.object({
   difficulty: z.enum(['Easy', 'Normal', 'Hard']),
 });
 
-type CreateCampaignForm = z.infer<typeof createCampaignSchema>;
+export type CreateCampaignForm = z.infer<typeof createCampaignSchema>;
 
 interface CreateCampaignModalProps {
   isOpen: boolean;
