@@ -31,21 +31,6 @@ Core purpose:
 - React Navigation (Stack + Bottom Tabs recommended)
 - (Future) Reanimated, Gesture Handler, FlashList for smooth performance
 
-## Recommended Folder Structure
-
-```
-├── screens/              # Main screens (Dashboard, Scenarios, Characters, Cards, Map, Settings)
-├── components/           # Reusable Gluestack-based components (CharacterCard, ScenarioTile, CardPile, etc.)
-├── store/                # Zustand stores (campaignStore.ts, cardStore.ts, mapStore.ts)
-├── types/                # Strict TypeScript interfaces (campaign.ts, character.ts, scenario.ts, card.ts)
-├── data/                 # Static game data (scenarios.ts, characters.ts, cardDatabase.ts, initialState.ts)
-├── navigation/           # React Navigation setup + types
-├── hooks/                # Custom hooks (useCharacter, useScenario, usePersistence, etc.)
-├── utils/                # Pure helpers (gameLogic, formatters, validators)
-├── constants/            # Game constants, colors, RE-themed tokens
-└── assets/               # Images, icons, fonts
-```
-
 ## State Management Rules
 
 - Use **Zustand** as the only state manager

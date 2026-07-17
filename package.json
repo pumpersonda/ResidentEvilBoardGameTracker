@@ -10,7 +10,9 @@
     "lint": "eslint components",
     "lint:fix": "eslint . --fix",
     "format:fix": "prettier --write .",
-    "format": "prettier --check ."
+    "format": "prettier --check .",
+    "test": "jest --watch",
+    "test:ci": "jest"
   },
   "dependencies": {
     "@expo/html-elements": "^0.12.5",
@@ -49,6 +51,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
     "@typescript-eslint/eslint-plugin": "^8.62.0",
     "@typescript-eslint/parser": "^8.62.0",
@@ -56,8 +59,11 @@
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "jest": "^30.4.2",
+    "jest-environment-node": "^30.4.1",
     "prettier": "^3.9.3",
     "tailwindcss": "^4.1.18",
+    "ts-jest": "^29.4.11",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.62.0"
   },
