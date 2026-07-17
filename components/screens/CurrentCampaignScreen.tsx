@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
-import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
-import { Pressable } from '@/components/ui/pressable';
 import { useCurrentCampaign } from '@/store/campaignStore';
+import { CampaignTabBar, TabOption } from '@/components/campain/CampaignTabBar';
+import { SummaryTab } from '@/components/campain/tabs/SummaryTab';
+import { CampaignHeader } from '@/components/campain/CampaignHeader';
 
-type TabOption = 'Characters' | 'ItemBox' | 'Cards' | 'Scenarios';
-
-const TABS: { id: TabOption; label: string }[] = [
-  { id: 'Characters', label: 'Characters' },
-  { id: 'ItemBox', label: 'Item Box' },
-  { id: 'Cards', label: 'Cards' },
-  { id: 'Scenarios', label: 'Scenarios' },
-];
+// TODO: Import your other tabs as you build them
+// import { CharactersTab } from '@/components/campaign/tabs/CharactersTab';
 
 export default function CurrentCampaignScreen() {
   const campaign = useCurrentCampaign();
-  const [activeTab, setActiveTab] = useState<TabOption>('Characters');
+  const [activeTab, setActiveTab] = useState<TabOption>('Summary');
 
   if (!campaign) {
     return (
@@ -27,68 +22,31 @@ export default function CurrentCampaignScreen() {
     );
   }
 
+  /** Renders the corresponding tab content based on selected state */
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'Summary':
+        return <SummaryTab campaign={campaign} />;
+      case 'Characters':
+        return <Text className="text-white">Active Characters Roster</Text>; // Replace with <CharactersTab campaign={campaign} />
+      case 'ItemBox':
+        return <Text className="text-white">Shared Item Box</Text>; // Replace with <ItemBoxTab campaign={campaign} />
+      case 'Cards':
+        return <Text className="text-white">Campaign Cards</Text>; // Replace with <CardsTab campaign={campaign} />
+      case 'Scenarios':
+        return <Text className="text-white">Scenario Tracker</Text>; // Replace with <ScenariosTab campaign={campaign} />
+      default:
+        return null;
+    }
+  };
+
   return (
     <VStack className="flex-1 bg-zinc-950">
-      {/* Header Info */}
-      <VStack className="px-4 pt-6 pb-4 bg-zinc-900 border-b border-zinc-800">
-        <Text className="text-white text-2xl font-bold">{campaign.name}</Text>
-        <Text className="text-zinc-400">
-          {campaign.game} • Danger: {campaign.dangerLevel}
-        </Text>
-      </VStack>
+      <CampaignHeader campaign={campaign} />
+      <CampaignTabBar activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Custom Tab Bar */}
-      <HStack className="border-b border-zinc-800">
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-2">
-          {TABS.map(tab => {
-            const isActive = activeTab === tab.id;
-            return (
-              <Pressable
-                key={tab.id}
-                onPress={() => setActiveTab(tab.id)}
-                className={`px-4 py-3 border-b-2 ${
-                  isActive ? 'border-red-600' : 'border-transparent'
-                }`}
-              >
-                <Text className={`font-semibold ${isActive ? 'text-red-600' : 'text-zinc-500'}`}>
-                  {tab.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </ScrollView>
-      </HStack>
-
-      {/* Tab Content Area */}
       <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-        {activeTab === 'Characters' && (
-          <VStack space="md">
-            <Text className="text-white text-lg">Active Characters Roster</Text>
-            {/* TODO: Add Character Cards here */}
-          </VStack>
-        )}
-
-        {activeTab === 'ItemBox' && (
-          <VStack space="md">
-            <Text className="text-white text-lg">Shared Item Box</Text>
-            {/* TODO: List items in the box */}
-          </VStack>
-        )}
-
-        {activeTab === 'Cards' && (
-          <VStack space="md">
-            <Text className="text-white text-lg">Campaign Cards</Text>
-            <Text className="text-zinc-400 text-sm">Manage added and discarded cards here.</Text>
-            {/* TODO: Cards management UI */}
-          </VStack>
-        )}
-
-        {activeTab === 'Scenarios' && (
-          <VStack space="md">
-            <Text className="text-white text-lg">Scenario Tracker</Text>
-            {/* TODO: Scenario list (to be done later) */}
-          </VStack>
-        )}
+        {renderTabContent()}
       </ScrollView>
     </VStack>
   );
