@@ -37,6 +37,8 @@ interface CampaignStore {
   addItemToBox: (item: Item) => void;
   addedCard: (cardType: CardType, card: Card) => void;
   discardCard: (cardType: CardType, card: Card) => void;
+  removeFromAddedCards: (cardType: CardType, cardId: string, quantity: number) => void;
+  removeFromDiscardedCard: (cardType: CardType, cardId: string, quantity: number) => void;
 }
 
 export const useCampaignStore = create<CampaignStore>()(
@@ -60,7 +62,6 @@ export const useCampaignStore = create<CampaignStore>()(
             scenarios: [], // TODO: Load initial scenarios based on the game version
             discardedCards: {},
             addedCards: {},
-            handCards: [],
             createdAt: new Date().toISOString(),
           };
 
@@ -221,11 +222,17 @@ export const useCampaignStore = create<CampaignStore>()(
           allCampaigns: state.allCampaigns.map(c => {
             if (c.id !== state.currentCampaignId) return c;
             const currentDiscarded = c.discardedCards[cardType] || [];
+            const existingCard = currentDiscarded.find(cd => cd.id === card.id);
+            const newDiscarded = existingCard
+              ? currentDiscarded.map(cd =>
+                  cd.id === card.id ? { ...cd, quantity: cd.quantity + card.quantity } : cd
+                )
+              : [...currentDiscarded, card];
             return {
               ...c,
               discardedCards: {
                 ...c.discardedCards,
-                [cardType]: [...currentDiscarded, card],
+                [cardType]: newDiscarded,
               },
             };
           }),
@@ -236,11 +243,53 @@ export const useCampaignStore = create<CampaignStore>()(
           allCampaigns: state.allCampaigns.map(c => {
             if (c.id !== state.currentCampaignId) return c;
             const currentAdded = c.addedCards[cardType] || [];
+            const existingCard = currentAdded.find(ac => ac.id === card.id);
+            const newAdded = existingCard
+              ? currentAdded.map(ac =>
+                  ac.id === card.id ? { ...ac, quantity: ac.quantity + card.quantity } : ac
+                )
+              : [...currentAdded, card];
             return {
               ...c,
               addedCards: {
                 ...c.addedCards,
-                [cardType]: [...currentAdded, card],
+                [cardType]: newAdded,
+              },
+            };
+          }),
+        })),
+
+      removeFromAddedCards: (cardType, cardId, quantity) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const currentAdded = c.addedCards[cardType] || [];
+            const newAdded = currentAdded
+              .map(ac => (ac.id === cardId ? { ...ac, quantity: ac.quantity - quantity } : ac))
+              .filter(ac => ac.quantity > 0);
+            return {
+              ...c,
+              addedCards: {
+                ...c.addedCards,
+                [cardType]: newAdded,
+              },
+            };
+          }),
+        })),
+
+      removeFromDiscardedCard: (cardType, cardId, quantity) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const currentDiscarded = c.discardedCards[cardType] || [];
+            const newDiscarded = currentDiscarded
+              .map(cd => (cd.id === cardId ? { ...cd, quantity: cd.quantity - quantity } : cd))
+              .filter(cd => cd.quantity > 0);
+            return {
+              ...c,
+              discardedCards: {
+                ...c.discardedCards,
+                [cardType]: newDiscarded,
               },
             };
           }),

@@ -1,4 +1,4 @@
-import { Card, GameVersion } from '@/types/index';
+import { Card, GameVersion } from '@/types';
 
 export type TensionColor = 'Green' | 'Amber' | 'Red';
 
@@ -15,6 +15,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Fevered Assault',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote:
       'Unnatural vigour possesses the undead, as they hurl themselves towards you in a stumbling run.',
@@ -26,6 +27,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Frayed Nerves',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote: 'Movement chases through the shadows, enemies all around you...',
     description:
@@ -37,6 +39,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Tragic Echoes',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote:
       'Some of these fiends still possess trinkets from their former lives, tragic echoes of what used to be.',
@@ -49,6 +52,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Gnawing Fear',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote: 'Bloody hands push at the windows and doors, a horde of foes waiting in ambush!',
     description:
@@ -60,6 +64,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Cornered',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote:
       'A vicious snarl sends a shiver down your spine, as you realise your foe has found you once more...',
@@ -72,6 +77,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Reanimate',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote:
       'Dead eyes flicker open to reveal milky orbs, as the closest corpse rises unsteadily to its feet...',
@@ -84,6 +90,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Mission Update',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote:
       'Your radio sputters into life, an abrupt reminder you are not alone in this forsaken place.',
@@ -95,6 +102,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Unfolding Events',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote: 'Something unusual awaits in the gloom ahead...',
     description:
@@ -106,6 +114,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Virulent Blood',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote:
       'A ghastly sense of animation possesses your foes, their bodies writhing unnaturally as they move...',
@@ -118,6 +127,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Sinister Echoes',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote:
       "Stumbling footsteps echo along the corridors, chasing your every move. Lay low, and don't let them find you!",
@@ -130,6 +140,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Diseased Claws',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote: "Filth crusts your foes' talons, and vile purple veins strain against their skin.",
     description:
@@ -141,6 +152,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'From the Depths',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     specialId: 18,
     quote:
@@ -154,6 +166,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Bee Swarm',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote: 'A swarm floats towards you, hostile towards the intruders in their unusual lair.',
     description:
@@ -165,6 +178,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Waterlogged',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote:
       'From the looks of things, a pipe burst here and doused everything in water, leaving it soaking wet.',
@@ -177,6 +191,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Flickering Lights',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote: 'The lights flicker overhead, making it nigh on impossible to aim.',
     description:
@@ -188,6 +203,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Treacherous Footing',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     quote:
       "The floor is slick with blood... you hope this doesn't belong to one of your teammates.",
@@ -200,6 +216,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Sinister Hiss',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     specialId: 15,
     quote:
@@ -213,6 +230,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Sabotage!',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     specialId: 22,
     quote: 'Someone has sabotaged your supplies...',
@@ -225,6 +243,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Foreboding Scene',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     specialId: 10,
     quote:
@@ -238,6 +257,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Ominous Feeling',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     specialId: 11,
     quote:
@@ -251,6 +271,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Keep Quiet!',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     specialId: 4,
     quote:
@@ -264,6 +285,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'No Escape',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Amber',
     specialId: 2,
     quote:
@@ -277,6 +299,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Claws from the Ceiling',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 12,
     quote:
@@ -290,6 +313,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Dragged Shackles',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 9,
     quote: 'An eerie groan scratches across your senses, a nail leaving a bloody trail...',
@@ -302,6 +326,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Countdown to Explosion',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 13,
     quote:
@@ -314,6 +339,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: "Keeper's Diary",
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 5,
     quote: '4// Itchy. Tasty.',
@@ -326,6 +352,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: "Hunter's Prey",
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 20,
     quote: "A call sounds, feral and dripping with murderous intent. They've found you.",
@@ -338,6 +365,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Overrun',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     quote: "They're everywhere! There's no escape!",
     description:
@@ -349,6 +377,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Infestation',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 19,
     quote:
@@ -362,6 +391,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Waterway Open',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 16,
     quote: 'With a horrendous metallic grinding noise, the waterway opens.',
@@ -374,6 +404,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Shattering Glass',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 1,
     quote: 'You jump at the sound of breaking glass, and prepare for the worst...',
@@ -386,6 +417,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Crimson Rage',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 3,
     quote:
@@ -398,6 +430,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Deathly Rasp',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     quote:
       'A sinister growl echoes from the walls, dripping with malicious intent. But where is it coming from? Are you under attack?',
@@ -409,6 +442,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Smashed Asunder',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 6,
     quote:
@@ -422,6 +456,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Murder of Crows',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 7,
     quote: 'Death descends in a flurry of screeching calls and midnight black feathers!',
@@ -434,6 +469,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Out of the Shadows',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 8,
     quote:
@@ -447,6 +483,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Three Minutes Until Explosion',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     specialId: 14,
     quote: 'At last, a weapon you can use to defeat the tyrant! Quick, before you run out of time!',
@@ -459,6 +496,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Vigour Mortis',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Red',
     quote:
       'Your enemies lunge forward unpredictably, nails clawing through the air as their teeth snap with bestial hunger.',
@@ -471,6 +509,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Supply Cache',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Green',
     quote:
       'There are plenty of supplies here, if only you can clear out some of the enemies and investigate properly.',
@@ -483,6 +522,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Gunshots in the Distance',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Green',
     quote:
       'Gunfire punctures the air ahead, accompanied by violent screeching. Then silence once more, as your unknown ally makes their escape.',
@@ -495,6 +535,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Respite',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Green',
     quote:
       'This place looks mercifully secure of enemies, but for how long? Best not push your luck...',
@@ -507,6 +548,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'Cleared Out',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Green',
     specialId: 21,
     quote:
@@ -520,6 +562,7 @@ export const TENSION_CARDS: TensionCard[] = [
     name: 'All Clear',
     type: 'Tension',
     game: GameVersion.RE1,
+    quantity: 1,
     color: 'Green',
     quote: '',
     description: '',

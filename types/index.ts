@@ -85,6 +85,7 @@ export interface Card {
   type: CardType;
   specialId?: number;
   game: GameVersion;
+  quantity: number | 1;
 }
 
 export type ScenarioStatus = 'Locked' | 'Unlocked' | 'Completed';
@@ -104,7 +105,6 @@ export interface Campaign {
   activeCharacters: ActiveCharacter[];
   reserveCharacters: Character[];
   itemsBox: Item[];
-  handCards: Card[];
   addedCards: Partial<Record<CardType, Card[]>>;
   discardedCards: Partial<Record<CardType, Card[]>>;
   scenarios: Scenario[];
