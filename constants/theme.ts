@@ -19,4 +19,10 @@ export const THEME_COLORS: Record<
     mutedForeground: '#a1a1a1',
     destructive: '#ff6467',
   },
+  red: {
+    background: '#1a0505',
+    foreground: '#f5e8df',
+    mutedForeground: '#b08a8a',
+    destructive: '#ff6b6b',
+  },
 };

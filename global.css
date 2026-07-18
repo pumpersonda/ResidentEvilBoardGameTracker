@@ -46,6 +46,26 @@
       --accent-foreground: 250 250 250;
       --ring: 115 115 115;
     }
+
+    @variant red {
+      --primary: 220 38 38;
+      --primary-foreground: 250 245 240;
+      --card: 42 10 10;
+      --secondary: 63 18 18;
+      --secondary-foreground: 245 232 223;
+      --background: 26 5 5;
+      --popover: 42 10 10;
+      --popover-foreground: 245 232 223;
+      --muted: 51 16 16;
+      --muted-foreground: 176 138 138;
+      --destructive: 255 107 107;
+      --foreground: 245 232 223;
+      --border: 74 21 21;
+      --input: 74 21 21;
+      --accent: 185 28 28;
+      --accent-foreground: 245 232 223;
+      --ring: 220 38 38;
+    }
   }
 }
 

@@ -3,7 +3,7 @@ import { Pressable, ScrollView } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
-import { Plus, Sun, Moon, MonitorSmartphone } from 'lucide-react-native';
+import { Plus, Sun, Moon, MonitorSmartphone, Biohazard } from 'lucide-react-native';
 import CampaignCard from '@/components/campain/CampaignCard';
 import CreateCampaignModal from '@/components/screens/CreateCampaignModal';
 import { useCampaignStore } from '@/store/campaignStore';
@@ -17,13 +17,15 @@ import { RootStackParamList } from '@/components/navigation/types';
 
 const NEXT_THEME_MODE: Record<ThemeMode, ThemeMode> = {
   light: 'dark',
-  dark: 'system',
+  dark: 'red',
+  red: 'system',
   system: 'light',
 };
 
 const THEME_MODE_ICON = {
   light: Sun,
   dark: Moon,
+  red: Biohazard,
   system: MonitorSmartphone,
 } as const;
 

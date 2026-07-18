@@ -3,7 +3,7 @@ import { ImageSourcePropType } from 'react-native';
 // Single source of truth for registered UniWind themes.
 // Adding a theme: append it here, add its CSS vars in global.css,
 // and add it to `extraThemes` in metro.config.js.
-export const THEME_NAMES = ['light', 'dark'] as const;
+export const THEME_NAMES = ['light', 'dark', 'red'] as const;
 export type ThemeName = (typeof THEME_NAMES)[number];
 export type ThemeMode = ThemeName | 'system';
 
