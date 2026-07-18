@@ -49,13 +49,24 @@ export interface CharacterHealth {
   isPoisoned: boolean;
 }
 
-export type ItemCategory = 'Weapon' | 'Herb' | 'Ammo' | 'Key' | 'Tool' | 'Other';
+// ==================== ENUMS ====================
+export enum ItemType {
+  Weapon = 'weapon',
+  Ammunition = 'ammunition',
+  Key = 'key',
+  Item = 'item',
+  Tool = 'tool',
+  Defensive = 'defensive',
+  Other = 'other',
+}
 
-export interface Item {
-  id: string;
-  name: string;
+export type ItemCategory = 'S' | 'A' | 'B' | 'C';
+
+// ==================== INTERFACE ====================
+export interface Item extends Card {
+  itemType: ItemType;
   category: ItemCategory;
-  quantity: number;
+  ammunition?: number;
 }
 
 export interface ActiveCharacter {
@@ -72,7 +83,8 @@ export interface Card {
   id: string;
   name: string;
   type: CardType;
-  serialNumber?: string;
+  specialId?: number;
+  game: GameVersion;
 }
 
 export type ScenarioStatus = 'Locked' | 'Unlocked' | 'Completed';
