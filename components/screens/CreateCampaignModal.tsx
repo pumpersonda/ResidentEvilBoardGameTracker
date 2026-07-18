@@ -35,6 +35,8 @@ import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 
 import { X } from 'lucide-react-native';
+import { useResolvedTheme } from '@/hooks/useResolvedTheme';
+import { THEME_COLORS } from '@/constants/theme';
 
 // Zod Schema
 const createCampaignSchema = z.object({
@@ -56,6 +58,7 @@ export default function CreateCampaignModal({
   onClose,
   onCreate,
 }: CreateCampaignModalProps) {
+  const resolvedTheme = useResolvedTheme();
   const {
     control,
     handleSubmit,
@@ -80,11 +83,11 @@ export default function CreateCampaignModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md">
       <ModalBackdrop />
-      <ModalContent className="bg-zinc-900">
+      <ModalContent className="bg-card">
         <ModalHeader>
-          <Text className="text-white text-xl font-semibold">Create New Campaign</Text>
+          <Text className="text-foreground text-xl font-semibold">Create New Campaign</Text>
           <ModalCloseButton>
-            <X color="#a1a1aa" size={20} />
+            <X color={THEME_COLORS[resolvedTheme].mutedForeground} size={20} />
           </ModalCloseButton>
         </ModalHeader>
 
@@ -92,39 +95,41 @@ export default function CreateCampaignModal({
           <VStack space="lg">
             {/* Name */}
             <VStack space="xs">
-              <Text className="text-zinc-400 text-sm">Campaign Name</Text>
+              <Text className="text-muted-foreground text-sm">Campaign Name</Text>
               <Controller
                 control={control}
                 name="name"
                 render={({ field: { onChange, value } }) => (
-                  <Input className="bg-zinc-950 border-zinc-700 border">
+                  <Input className="bg-background border-border border">
                     <InputField
                       placeholder="Enter campaign name"
                       value={value}
                       onChangeText={onChange}
-                      className="text-white"
+                      className="text-foreground"
                     />
                   </Input>
                 )}
               />
-              {errors.name && <Text className="text-red-500 text-sm">{errors.name.message}</Text>}
+              {errors.name && (
+                <Text className="text-destructive text-sm">{errors.name.message}</Text>
+              )}
             </VStack>
 
             {/* Game Version */}
             <VStack space="xs">
-              <Text className="text-zinc-400 text-sm">Game Version</Text>
+              <Text className="text-muted-foreground text-sm">Game Version</Text>
               <Controller
                 control={control}
                 name="gameVersion"
                 render={({ field: { onChange, value } }) => (
                   <Select selectedValue={value} onValueChange={onChange}>
-                    <SelectTrigger className="bg-zinc-950 border-zinc-700">
-                      <SelectInput placeholder="Select version" className="text-white" />
+                    <SelectTrigger className="bg-background border-border">
+                      <SelectInput placeholder="Select version" className="text-foreground" />
                       <SelectIcon />
                     </SelectTrigger>
                     <SelectPortal>
                       <SelectBackdrop />
-                      <SelectContent className="bg-zinc-900">
+                      <SelectContent className="bg-card">
                         <SelectDragIndicatorWrapper>
                           <SelectDragIndicator />
                         </SelectDragIndicatorWrapper>
@@ -140,19 +145,19 @@ export default function CreateCampaignModal({
 
             {/* Difficulty */}
             <VStack space="xs">
-              <Text className="text-zinc-400 text-sm">Difficulty</Text>
+              <Text className="text-muted-foreground text-sm">Difficulty</Text>
               <Controller
                 control={control}
                 name="difficulty"
                 render={({ field: { onChange, value } }) => (
                   <Select selectedValue={value} onValueChange={onChange}>
-                    <SelectTrigger className="bg-zinc-950 border-zinc-700">
-                      <SelectInput placeholder="Select difficulty" className="text-white" />
+                    <SelectTrigger className="bg-background border-border">
+                      <SelectInput placeholder="Select difficulty" className="text-foreground" />
                       <SelectIcon />
                     </SelectTrigger>
                     <SelectPortal>
                       <SelectBackdrop />
-                      <SelectContent className="bg-zinc-900">
+                      <SelectContent className="bg-card">
                         <SelectDragIndicatorWrapper>
                           <SelectDragIndicator />
                         </SelectDragIndicatorWrapper>
@@ -170,11 +175,11 @@ export default function CreateCampaignModal({
 
         <ModalFooter>
           <HStack space="md" className="w-full">
-            <Button variant="outline" className="flex-1 border-zinc-700" onPress={onClose}>
-              <ButtonText className="text-zinc-400">Cancel</ButtonText>
+            <Button variant="outline" className="flex-1 border-border" onPress={onClose}>
+              <ButtonText className="text-muted-foreground">Cancel</ButtonText>
             </Button>
             <Button
-              className="flex-1 bg-red-600"
+              className="flex-1 bg-destructive active:opacity-90"
               onPress={handleSubmit(onSubmit)}
               isDisabled={!isValid}
             >

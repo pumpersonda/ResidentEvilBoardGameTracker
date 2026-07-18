@@ -6,8 +6,11 @@ import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import AppNavigator from '@/components/navigation/AppNavigator';
 import '@/global.css';
 import { Uniwind } from 'uniwind';
+import { useThemeStore } from '@/store/themeStore';
 
 export default function App() {
+  const mode = useThemeStore(state => state.mode);
+
   return (
     <SafeAreaListener
       onChange={({ insets }) => {
@@ -15,7 +18,7 @@ export default function App() {
       }}
     >
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <GluestackUIProvider mode="dark">
+        <GluestackUIProvider mode={mode}>
           <NavigationContainer>
             <AppNavigator />
           </NavigationContainer>

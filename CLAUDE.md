@@ -45,6 +45,18 @@ Core purpose:
 - Provide `resetCampaign()` action for testing/dev
 - Keep actions simple and predictable (updateScenarioStatus, addItemToInventory, discardTensionCard, etc.)
 
+## Theming (UniWind, runtime-switchable)
+
+- Styling engine is **UniWind** (Tailwind v4, CSS-first, no `tailwind.config.js`)
+- Active theme lives in `store/themeStore.ts` (`useThemeStore`, persisted key `re-theme-store`), decoupled from `campaignStore` since it's UI preference, not campaign data
+- `App.tsx` reads `mode` from `useThemeStore` and passes it to `GluestackUIProvider`, which calls `Uniwind.setTheme(mode)` — call `useThemeStore().setMode('dark' | 'light' | 'system')` anywhere to retheme the app instantly
+- `types/index.ts` exports `THEME_NAMES` (single source of truth array), `ThemeName`, and `ThemeMode` (`ThemeName | 'system'`)
+- **To add a new named theme** (e.g. a RE-atmosphere variant beyond light/dark):
+  1. Append the name to `THEME_NAMES` in `types/index.ts`
+  2. Add its CSS variable block (`@variant <name> { ... }`) inside `@layer theme` in `global.css`
+  3. Add the name to `extraThemes` in `metro.config.js`
+  4. Rebuild — `uniwind-types.d.ts` regenerates automatically
+
 ## Coding Conventions
 
 - Functional components + hooks only

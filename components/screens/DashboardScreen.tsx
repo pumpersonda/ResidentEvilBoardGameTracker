@@ -3,13 +3,29 @@ import { Pressable, ScrollView } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
-import { Plus } from 'lucide-react-native';
+import { Plus, Sun, Moon, MonitorSmartphone } from 'lucide-react-native';
 import CampaignCard from '@/components/campain/CampaignCard';
 import CreateCampaignModal from '@/components/screens/CreateCampaignModal';
 import { useCampaignStore } from '@/store/campaignStore';
+import { useThemeStore } from '@/store/themeStore';
+import { useResolvedTheme } from '@/hooks/useResolvedTheme';
+import { THEME_COLORS } from '@/constants/theme';
+import { ThemeMode } from '@/types';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/components/navigation/types';
+
+const NEXT_THEME_MODE: Record<ThemeMode, ThemeMode> = {
+  light: 'dark',
+  dark: 'system',
+  system: 'light',
+};
+
+const THEME_MODE_ICON = {
+  light: Sun,
+  dark: Moon,
+  system: MonitorSmartphone,
+} as const;
 
 export default function DashboardScreen() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -17,10 +33,19 @@ export default function DashboardScreen() {
   const createCampaign = useCampaignStore(state => state.createCampaign);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const setCurrentCampaignId = useCampaignStore(state => state.setCurrentCampaignId);
+  const themeMode = useThemeStore(state => state.mode);
+  const setThemeMode = useThemeStore(state => state.setMode);
+  const resolvedTheme = useResolvedTheme();
 
   const handleCreateCampaign = () => {
     setIsCreateModalOpen(true);
   };
+
+  const handleCycleTheme = () => {
+    setThemeMode(NEXT_THEME_MODE[themeMode]);
+  };
+
+  const ThemeModeIcon = THEME_MODE_ICON[themeMode];
 
   const handleOpenCampaign = (campaignId: string) => {
     setCurrentCampaignId(campaignId);
@@ -28,10 +53,16 @@ export default function DashboardScreen() {
   };
 
   return (
-    <VStack className="flex-1 bg-zinc-950">
-      {/* Header - Only title */}
+    <VStack className="flex-1 bg-background">
+      {/* Header - Title + theme toggle */}
       <HStack className="px-4 pt-4 pb-2 justify-between items-center">
-        <Text className="text-white text-3xl font-bold">Campaigns</Text>
+        <Text className="text-foreground text-3xl font-bold">Campaigns</Text>
+        <Pressable
+          onPress={handleCycleTheme}
+          className="p-2 rounded-full bg-secondary active:opacity-80"
+        >
+          <ThemeModeIcon color={THEME_COLORS[resolvedTheme].foreground} size={20} />
+        </Pressable>
       </HStack>
 
       {/* Content */}
@@ -54,9 +85,9 @@ export default function DashboardScreen() {
           // Improved Empty State
           <VStack className="flex-1 items-center justify-center py-20" space="lg">
             <VStack className="items-center" space="md">
-              <Plus size={56} color="#3f3f46" />
-              <Text className="text-zinc-300 text-xl font-semibold">No campaigns yet</Text>
-              <Text className="text-zinc-500 text-center px-6">
+              <Plus size={56} color={THEME_COLORS[resolvedTheme].mutedForeground} />
+              <Text className="text-foreground text-xl font-semibold">No campaigns yet</Text>
+              <Text className="text-muted-foreground text-center px-6">
                 Create your first campaign to start tracking your{'\n'}
                 Resident Evil board game progress.
               </Text>
@@ -68,8 +99,9 @@ export default function DashboardScreen() {
       {/* Floating Action Button - Only way to create a campaign */}
       <Pressable
         onPress={handleCreateCampaign}
-        className="absolute bottom-8 right-6 bg-red-600 w-14 h-14 rounded-full items-center justify-center shadow-lg active:bg-red-700"
+        className="absolute bottom-8 right-6 bg-destructive w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-90"
       >
+        {/* White reads well on both the light and dark destructive-red shades */}
         <Plus color="white" size={26} />
       </Pressable>
       <CreateCampaignModal

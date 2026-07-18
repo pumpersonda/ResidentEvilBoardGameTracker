@@ -20,7 +20,7 @@ interface CampaignTabBarProps {
 }
 
 export const CampaignTabBar: React.FC<CampaignTabBarProps> = ({ activeTab, onTabChange }) => (
-  <HStack className="border-b border-zinc-800 bg-zinc-950">
+  <HStack className="border-b border-border bg-background">
     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-2">
       {TABS.map(tab => {
         const isActive = activeTab === tab.id;
@@ -28,9 +28,11 @@ export const CampaignTabBar: React.FC<CampaignTabBarProps> = ({ activeTab, onTab
           <Pressable
             key={tab.id}
             onPress={() => onTabChange(tab.id)}
-            className={`px-4 py-4 border-b-2 ${isActive ? 'border-red-600' : 'border-transparent'}`}
+            className={`px-4 py-4 border-b-2 ${isActive ? 'border-destructive' : 'border-transparent'}`}
           >
-            <Text className={`font-semibold ${isActive ? 'text-red-600' : 'text-zinc-500'}`}>
+            <Text
+              className={`font-semibold ${isActive ? 'text-destructive' : 'text-muted-foreground'}`}
+            >
               {tab.label}
             </Text>
           </Pressable>

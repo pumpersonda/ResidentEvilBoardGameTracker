@@ -8,9 +8,9 @@ interface CampaignHeaderProps {
 }
 
 export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ campaign }) => (
-  <VStack className="px-4 pt-6 pb-4 bg-zinc-900 border-b border-zinc-800">
-    <Text className="text-white text-2xl font-bold">{campaign.name}</Text>
-    <Text className="text-zinc-400">
+  <VStack className="px-4 pt-6 pb-4 bg-card border-b border-border">
+    <Text className="text-foreground text-2xl font-bold">{campaign.name}</Text>
+    <Text className="text-muted-foreground">
       {campaign.game} • Danger Level: {campaign.dangerLevel}
     </Text>
   </VStack>

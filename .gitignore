@@ -44,3 +44,5 @@ yarn-error.*
 # Referencia de reglamentos y assets grandes (no subir al repo)
 attachments/
 *.pdf
+./.claude
+./.agents

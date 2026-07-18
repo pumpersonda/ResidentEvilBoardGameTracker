@@ -4,8 +4,7 @@ import { OverlayProvider } from '@gluestack-ui/core/overlay/creator';
 import { ToastProvider } from '@gluestack-ui/core/toast/creator';
 import { Uniwind } from 'uniwind';
 import { script } from './script';
-
-export type ModeType = 'light' | 'dark' | 'system';
+import { ThemeMode } from '@/types';
 
 const useSafeLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
@@ -13,7 +12,7 @@ export function GluestackUIProvider({
   mode = 'dark',
   ...props
 }: {
-  mode?: ModeType;
+  mode?: ThemeMode;
   children?: React.ReactNode;
 }) {
   const handleMediaQuery = React.useCallback((e: MediaQueryListEvent) => {

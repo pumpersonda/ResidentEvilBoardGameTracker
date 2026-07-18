@@ -16,8 +16,8 @@ export default function CurrentCampaignScreen() {
 
   if (!campaign) {
     return (
-      <VStack className="flex-1 bg-zinc-950 items-center justify-center p-4">
-        <Text className="text-zinc-400">No active campaign selected.</Text>
+      <VStack className="flex-1 bg-background items-center justify-center p-4">
+        <Text className="text-muted-foreground">No active campaign selected.</Text>
       </VStack>
     );
   }
@@ -28,20 +28,20 @@ export default function CurrentCampaignScreen() {
       case 'Summary':
         return <SummaryTab campaign={campaign} />;
       case 'Characters':
-        return <Text className="text-white">Active Characters Roster</Text>; // Replace with <CharactersTab campaign={campaign} />
+        return <Text className="text-foreground">Active Characters Roster</Text>; // Replace with <CharactersTab campaign={campaign} />
       case 'ItemBox':
-        return <Text className="text-white">Shared Item Box</Text>; // Replace with <ItemBoxTab campaign={campaign} />
+        return <Text className="text-foreground">Shared Item Box</Text>; // Replace with <ItemBoxTab campaign={campaign} />
       case 'Cards':
-        return <Text className="text-white">Campaign Cards</Text>; // Replace with <CardsTab campaign={campaign} />
+        return <Text className="text-foreground">Campaign Cards</Text>; // Replace with <CardsTab campaign={campaign} />
       case 'Scenarios':
-        return <Text className="text-white">Scenario Tracker</Text>; // Replace with <ScenariosTab campaign={campaign} />
+        return <Text className="text-foreground">Scenario Tracker</Text>; // Replace with <ScenariosTab campaign={campaign} />
       default:
         return null;
     }
   };
 
   return (
-    <VStack className="flex-1 bg-zinc-950">
+    <VStack className="flex-1 bg-background">
       <CampaignHeader campaign={campaign} />
       <CampaignTabBar activeTab={activeTab} onTabChange={setActiveTab} />
 

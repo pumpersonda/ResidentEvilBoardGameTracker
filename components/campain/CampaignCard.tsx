@@ -1,5 +1,9 @@
-import { Card, HStack, Pressable, Text, VStack } from '@gluestack-ui/themed';
 import React from 'react';
+import { Card } from '@/components/ui/card';
+import { HStack } from '@/components/ui/hstack';
+import { Pressable } from '@/components/ui/pressable';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
 
 export interface CampaignCardProps {
   id: string;
@@ -20,15 +24,15 @@ export default function CampaignCard({
 }: CampaignCardProps) {
   return (
     <Pressable key={id} onPress={() => onPress(id)}>
-      <Card className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl">
+      <Card className="p-4 bg-card border border-border rounded-2xl">
         <VStack className="gap-2">
           <HStack className="justify-between items-center">
-            <Text className="text-white text-xl font-semibold">{name}</Text>
-            <Text className="text-zinc-400">{game}</Text>
+            <Text className="text-foreground text-xl font-semibold">{name}</Text>
+            <Text className="text-muted-foreground">{game}</Text>
           </HStack>
 
           <HStack className="justify-between items-center">
-            <Text className="text-zinc-400">
+            <Text className="text-muted-foreground">
               {difficulty} • Danger: {dangerLevel}
             </Text>
           </HStack>
