@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { ScrollView } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
 import { Text } from '@/components/ui/text';
 import { useCurrentCampaign } from '@/store/campaignStore';
 import { CampaignTabBar, TabOption } from '@/components/campain/CampaignTabBar';
 import { SummaryTab } from '@/components/campain/tabs/SummaryTab';
+import { DiscardedCardsTab } from '@/components/campain/tabs/DiscardedCardsTab';
 import { CampaignHeader } from '@/components/campain/CampaignHeader';
 
 // TODO: Import your other tabs as you build them
@@ -28,13 +28,13 @@ export default function CurrentCampaignScreen() {
       case 'Summary':
         return <SummaryTab campaign={campaign} />;
       case 'Characters':
-        return <Text className="text-foreground">Active Characters Roster</Text>; // Replace with <CharactersTab campaign={campaign} />
+        return <Text className="text-foreground p-4">Active Characters Roster</Text>; // Replace with <CharactersTab campaign={campaign} />
       case 'ItemBox':
-        return <Text className="text-foreground">Shared Item Box</Text>; // Replace with <ItemBoxTab campaign={campaign} />
+        return <Text className="text-foreground p-4">Shared Item Box</Text>; // Replace with <ItemBoxTab campaign={campaign} />
       case 'Cards':
-        return <Text className="text-foreground">Campaign Cards</Text>; // Replace with <CardsTab campaign={campaign} />
+        return <DiscardedCardsTab campaign={campaign} />;
       case 'Scenarios':
-        return <Text className="text-foreground">Scenario Tracker</Text>; // Replace with <ScenariosTab campaign={campaign} />
+        return <Text className="text-foreground p-4">Scenario Tracker</Text>; // Replace with <ScenariosTab campaign={campaign} />
       default:
         return null;
     }
@@ -45,9 +45,7 @@ export default function CurrentCampaignScreen() {
       <CampaignHeader campaign={campaign} />
       <CampaignTabBar activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
-        {renderTabContent()}
-      </ScrollView>
+      <VStack className="flex-1">{renderTabContent()}</VStack>
     </VStack>
   );
 }

@@ -342,7 +342,7 @@ export const TENSION_CARDS: TensionCard[] = [
     quantity: 1,
     color: 'Red',
     specialId: 5,
-    quote: '4// Itchy. Tasty.',
+    quote: 'Itchy. Tasty.',
     description:
       'This card remains in play. The next time a character makes a search action, after the action is resolved, they draw an encounter card, then discard this card.',
     hasSpecialEffect: false,
