@@ -5,7 +5,17 @@ import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
 import { Plus, Sun, Moon, MonitorSmartphone, Biohazard } from 'lucide-react-native';
 import CampaignCard from '@/components/campain/CampaignCard';
-import CreateCampaignModal from '@/components/screens/CreateCampaignModal';
+import CreateCampaignModal, { CreateCampaignForm } from '@/components/screens/CreateCampaignModal';
+import {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from '@/components/ui/alert-dialog';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Toast, ToastTitle, ToastDescription, useToast } from '@/components/ui/toast';
 import { useCampaignStore } from '@/store/campaignStore';
 import { useThemeStore } from '@/store/themeStore';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
@@ -31,16 +41,56 @@ const THEME_MODE_ICON = {
 
 export default function DashboardScreen() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [campaignPendingDeletion, setCampaignPendingDeletion] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const campaigns = useCampaignStore(state => state.allCampaigns);
   const createCampaign = useCampaignStore(state => state.createCampaign);
+  const deleteCampaign = useCampaignStore(state => state.deleteCampaign);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const setCurrentCampaignId = useCampaignStore(state => state.setCurrentCampaignId);
   const themeMode = useThemeStore(state => state.mode);
   const setThemeMode = useThemeStore(state => state.setMode);
   const resolvedTheme = useResolvedTheme();
+  const toast = useToast();
 
   const handleCreateCampaign = () => {
     setIsCreateModalOpen(true);
+  };
+
+  const handleCampaignCreated = (data: CreateCampaignForm) => {
+    createCampaign(data);
+    toast.show({
+      placement: 'top',
+      render: ({ id }) => (
+        <Toast nativeID={`toast-${id}`} action="success" variant="solid">
+          <ToastTitle className="font-semibold text-success">Campaign created</ToastTitle>
+          <ToastDescription size="sm">{`"${data.name}" is ready to play.`}</ToastDescription>
+        </Toast>
+      ),
+    });
+  };
+
+  const handleRequestDeleteCampaign = (id: string) => {
+    const campaign = campaigns.find(c => c.id === id);
+    if (campaign) setCampaignPendingDeletion({ id: campaign.id, name: campaign.name });
+  };
+
+  const handleConfirmDeleteCampaign = () => {
+    if (!campaignPendingDeletion) return;
+    const { id, name } = campaignPendingDeletion;
+    deleteCampaign(id);
+    setCampaignPendingDeletion(null);
+    toast.show({
+      placement: 'top',
+      render: ({ id: toastId }) => (
+        <Toast nativeID={`toast-${toastId}`} action="muted" variant="solid">
+          <ToastTitle className="font-semibold text-success">Campaign deleted</ToastTitle>
+          <ToastDescription size="sm">{`"${name}" has been removed.`}</ToastDescription>
+        </Toast>
+      ),
+    });
   };
 
   const handleCycleTheme = () => {
@@ -80,6 +130,7 @@ export default function DashboardScreen() {
                 difficulty={campaign.difficulty}
                 dangerLevel={campaign.dangerLevel}
                 onPress={handleOpenCampaign}
+                onDelete={handleRequestDeleteCampaign}
               />
             ))}
           </VStack>
@@ -109,8 +160,40 @@ export default function DashboardScreen() {
       <CreateCampaignModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onCreate={createCampaign}
+        onCreate={handleCampaignCreated}
       />
+
+      <AlertDialog
+        isOpen={campaignPendingDeletion !== null}
+        onClose={() => setCampaignPendingDeletion(null)}
+      >
+        <AlertDialogBackdrop />
+        <AlertDialogContent className="bg-card">
+          <AlertDialogHeader>
+            <Text className="text-foreground text-xl font-semibold">Delete campaign</Text>
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            <Text className="text-muted-foreground">
+              {`Delete "${campaignPendingDeletion?.name}"? This cannot be undone.`}
+            </Text>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button
+              variant="outline"
+              className="flex-1 border-border"
+              onPress={() => setCampaignPendingDeletion(null)}
+            >
+              <ButtonText className="text-muted-foreground">Cancel</ButtonText>
+            </Button>
+            <Button
+              className="flex-1 bg-destructive active:opacity-90"
+              onPress={handleConfirmDeleteCampaign}
+            >
+              <ButtonText>Delete</ButtonText>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </VStack>
   );
 }

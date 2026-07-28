@@ -21,6 +21,7 @@ interface CampaignStore {
   createCampaign: (formData: CreateCampaignForm) => void;
   setCurrentCampaignId: (campaignId: string | null) => void;
   updateCampaign: (updates: Partial<Campaign>) => void;
+  deleteCampaign: (campaignId: string) => void;
   resetCampaign: () => void;
 
   // Fast gameplay actions
@@ -78,6 +79,13 @@ export const useCampaignStore = create<CampaignStore>()(
           allCampaigns: state.allCampaigns.map(c =>
             c.id === state.currentCampaignId ? { ...c, ...updates } : c
           ),
+        })),
+
+      deleteCampaign: campaignId =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.filter(c => c.id !== campaignId),
+          currentCampaignId:
+            state.currentCampaignId === campaignId ? null : state.currentCampaignId,
         })),
 
       resetCampaign: () => set({ currentCampaignId: null }),

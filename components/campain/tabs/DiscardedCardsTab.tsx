@@ -8,10 +8,11 @@ import { Pressable } from '@/components/ui/pressable';
 import { Campaign, Card as CardModel, CardType } from '@/types';
 import { getGameCardData } from '@/data';
 import { useCampaignStore } from '@/store/campaignStore';
-import { Plus } from 'lucide-react-native';
+import { Plus, Trash2 } from 'lucide-react-native';
 import { TENSION_ACCENT_CLASSES, isTensionCard } from './tensionCardDisplay';
 import { DiscardCardModal } from './DiscardCardModal';
 import { SelectCardCategoryModal } from './SelectCardCategoryModal';
+import { THEME_COLORS } from '@/constants/theme';
 
 interface DiscardedCardsTabProps {
   campaign: Campaign;
@@ -21,9 +22,13 @@ export const DiscardedCardsTab: React.FC<DiscardedCardsTabProps> = ({ campaign }
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<CardType | null>(null);
   const discardCard = useCampaignStore(state => state.discardCard);
+  const removeFromDiscardedCard = useCampaignStore(state => state.removeFromDiscardedCard);
 
   const categories = Object.entries(campaign.discardedCards) as [CardType, CardModel[]][];
   const nonEmptyCategories = categories.filter(([, cards]) => cards.length > 0);
+  const onDelete = (cardType: CardType, cardId: string) => {
+    removeFromDiscardedCard(cardType, cardId, 1);
+  };
 
   return (
     <VStack className="flex-1">
@@ -39,7 +44,6 @@ export const DiscardedCardsTab: React.FC<DiscardedCardsTabProps> = ({ campaign }
                 <Text className="text-foreground text-xl font-bold">{cardType}</Text>
 
                 {cards.map(card => {
-
                   const resolved = getGameCardData(campaign.game, cardType, card.id) ?? card;
                   const accentClass = isTensionCard(resolved)
                     ? TENSION_ACCENT_CLASSES[resolved.color]
@@ -48,7 +52,7 @@ export const DiscardedCardsTab: React.FC<DiscardedCardsTabProps> = ({ campaign }
                   return (
                     <Card
                       key={card.id}
-                      className={`bg-card border border-border border-l-4 ${accentClass} p-4 rounded-2xl`}
+                      className={`bg-card border border-border border-l-4 ${accentClass} p-4 rounded-2xl text-center`}
                     >
                       <HStack className="justify-between items-start">
                         <Text className="text-foreground font-semibold flex-1">
@@ -57,6 +61,13 @@ export const DiscardedCardsTab: React.FC<DiscardedCardsTabProps> = ({ campaign }
                         <Text className="text-muted-foreground font-semibold ml-2">
                           x{card.quantity}
                         </Text>
+                        <Pressable
+                          onPress={() => onDelete(cardType, card.id)}
+                          className="px-3 rounded-full active:bg-destructive/10"
+                          accessibilityLabel="Eliminar carta"
+                        >
+                          <Trash2 color="gray" size={20} />
+                        </Pressable>
                       </HStack>
 
                       {isTensionCard(resolved) && (
