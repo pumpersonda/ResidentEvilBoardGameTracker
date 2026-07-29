@@ -8,9 +8,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "eslint components",
-    "lint:fix": "eslint . --fix",
-    "format:fix": "prettier --write .",
-    "format": "prettier --check .",
+    "lint:fix": "eslint ./components --fix",
+    "format:fix": "prettier --write ./components",
+    "format": "prettier --check ./components",
     "test": "jest --watch",
     "test:ci": "jest"
   },

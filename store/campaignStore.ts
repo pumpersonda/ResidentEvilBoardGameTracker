@@ -20,7 +20,7 @@ interface CampaignStore {
   // Core actions
   createCampaign: (formData: CreateCampaignForm) => void;
   setCurrentCampaignId: (campaignId: string | null) => void;
-  updateCampaign: (updates: Partial<Campaign>) => void;
+  updateCampaign: (campaignId: string, updates: Partial<Campaign>) => void;
   deleteCampaign: (campaignId: string) => void;
   resetCampaign: () => void;
 
@@ -74,10 +74,10 @@ export const useCampaignStore = create<CampaignStore>()(
 
       setCurrentCampaignId: campaignId => set({ currentCampaignId: campaignId }),
 
-      updateCampaign: updates =>
+      updateCampaign: (campaignId, updates) =>
         set(state => ({
           allCampaigns: state.allCampaigns.map(c =>
-            c.id === state.currentCampaignId ? { ...c, ...updates } : c
+            c.id === campaignId ? { ...c, ...updates } : c
           ),
         })),
 

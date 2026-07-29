@@ -3,7 +3,7 @@ import { Pressable, ScrollView } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
-import { Plus, Sun, Moon, MonitorSmartphone, Biohazard } from 'lucide-react-native';
+import { Biohazard, MonitorSmartphone, Moon, Plus, Sun } from 'lucide-react-native';
 import CampaignCard from '@/components/campain/CampaignCard';
 import CreateCampaignModal, { CreateCampaignForm } from '@/components/screens/CreateCampaignModal';
 import {
@@ -15,12 +15,12 @@ import {
   AlertDialogHeader,
 } from '@/components/ui/alert-dialog';
 import { Button, ButtonText } from '@/components/ui/button';
-import { Toast, ToastTitle, ToastDescription, useToast } from '@/components/ui/toast';
+import { Toast, ToastDescription, ToastTitle, useToast } from '@/components/ui/toast';
 import { useCampaignStore } from '@/store/campaignStore';
 import { useThemeStore } from '@/store/themeStore';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
-import { ThemeMode } from '@/types';
+import { Campaign, ThemeMode } from '@/types';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/components/navigation/types';
@@ -41,12 +41,14 @@ const THEME_MODE_ICON = {
 
 export default function DashboardScreen() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [campaignBeingEdited, setCampaignBeingEdited] = useState<Campaign | null>(null);
   const [campaignPendingDeletion, setCampaignPendingDeletion] = useState<{
     id: string;
     name: string;
   } | null>(null);
   const campaigns = useCampaignStore(state => state.allCampaigns);
   const createCampaign = useCampaignStore(state => state.createCampaign);
+  const updateCampaign = useCampaignStore(state => state.updateCampaign);
   const deleteCampaign = useCampaignStore(state => state.deleteCampaign);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const setCurrentCampaignId = useCampaignStore(state => state.setCurrentCampaignId);
@@ -56,17 +58,47 @@ export default function DashboardScreen() {
   const toast = useToast();
 
   const handleCreateCampaign = () => {
+    setCampaignBeingEdited(null);
     setIsCreateModalOpen(true);
   };
 
+  const handleEditCampaign = (id: string) => {
+    const campaign = campaigns.find(c => c.id === id);
+    if (campaign) {
+      setCampaignBeingEdited(campaign);
+      setIsCreateModalOpen(true);
+    }
+  };
+
+  const handleCloseCampaignModal = () => {
+    setIsCreateModalOpen(false);
+    setCampaignBeingEdited(null);
+  };
+
   const handleCampaignCreated = (data: CreateCampaignForm) => {
-    createCampaign(data);
+    const isEditing = !!data.id;
+
+    if (isEditing) {
+      updateCampaign(data.id!, {
+        name: data.name,
+        difficulty: data.difficulty,
+      });
+    } else {
+      createCampaign(data);
+    }
+
+    setCampaignBeingEdited(null);
+
     toast.show({
       placement: 'top',
       render: ({ id }) => (
         <Toast nativeID={`toast-${id}`} action="success" variant="solid">
-          <ToastTitle className="font-semibold text-success">Campaign created</ToastTitle>
-          <ToastDescription size="sm">{`"${data.name}" is ready to play.`}</ToastDescription>
+          <ToastTitle className="font-semibold text-success">
+            {isEditing ? 'Campaign updated' : 'Campaign created'}
+          </ToastTitle>
+          <ToastDescription size="sm">
+            {isEditing ? `"${data.name}" has been updated.` : `"${data.name}" is ready to play.`}
+          </ToastDescription>
         </Toast>
       ),
     });
@@ -130,6 +162,7 @@ export default function DashboardScreen() {
                 difficulty={campaign.difficulty}
                 dangerLevel={campaign.dangerLevel}
                 onPress={handleOpenCampaign}
+                onEdit={handleEditCampaign}
                 onDelete={handleRequestDeleteCampaign}
               />
             ))}
@@ -159,8 +192,9 @@ export default function DashboardScreen() {
       </Pressable>
       <CreateCampaignModal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={handleCloseCampaignModal}
         onCreate={handleCampaignCreated}
+        editingCampaign={campaignBeingEdited}
       />
 
       <AlertDialog

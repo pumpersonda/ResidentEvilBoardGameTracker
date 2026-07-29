@@ -9,10 +9,9 @@ import { Campaign, Card as CardModel, CardType } from '@/types';
 import { getGameCardData } from '@/data';
 import { useCampaignStore } from '@/store/campaignStore';
 import { Plus, Trash2 } from 'lucide-react-native';
-import { TENSION_ACCENT_CLASSES, isTensionCard } from './tensionCardDisplay';
+import { isTensionCard, TENSION_ACCENT_CLASSES } from './tensionCardDisplay';
 import { DiscardCardModal } from './DiscardCardModal';
 import { SelectCardCategoryModal } from './SelectCardCategoryModal';
-import { THEME_COLORS } from '@/constants/theme';
 
 interface DiscardedCardsTabProps {
   campaign: Campaign;

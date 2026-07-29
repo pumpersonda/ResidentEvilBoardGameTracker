@@ -2,21 +2,21 @@ import React, { useMemo, useState } from 'react';
 import {
   Modal,
   ModalBackdrop,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
 } from '@/components/ui/modal';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Pressable } from '@/components/ui/pressable';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input';
-import { Search, Trash2, X } from 'lucide-react-native';
+import { Search, X } from 'lucide-react-native';
 import { Card as CardModel, CardType, GameVersion } from '@/types';
 import { getGameCards } from '@/data';
-import { TENSION_ACCENT_CLASSES, isTensionCard } from './tensionCardDisplay';
+import { isTensionCard, TENSION_ACCENT_CLASSES } from './tensionCardDisplay';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
 

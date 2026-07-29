@@ -2,15 +2,14 @@ import React, { useMemo } from 'react';
 import {
   Modal,
   ModalBackdrop,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
 } from '@/components/ui/modal';
 import { Pressable } from '@/components/ui/pressable';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
-import { HStack } from '@/components/ui/hstack';
 import { ChevronRight, X } from 'lucide-react-native';
 import { Card as CardModel, CardType, GameVersion } from '@/types';
 import { getGameCards } from '@/data';

@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
   Modal,
   ModalBackdrop,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
 } from '@/components/ui/modal';
 
 import { Button, ButtonText } from '@/components/ui/button';
@@ -19,15 +19,15 @@ import { Input, InputField } from '@/components/ui/input';
 
 import {
   Select,
-  SelectTrigger,
-  SelectInput,
-  SelectIcon,
-  SelectPortal,
   SelectBackdrop,
   SelectContent,
-  SelectDragIndicatorWrapper,
   SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
   SelectItem,
+  SelectPortal,
+  SelectTrigger,
 } from '@/components/ui/select';
 
 import { Text } from '@/components/ui/text';
@@ -37,9 +37,11 @@ import { HStack } from '@/components/ui/hstack';
 import { X } from 'lucide-react-native';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
+import { Campaign } from '@/types';
 
 // Zod Schema
 const createCampaignSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(3, 'The name should have at least 3 characters'),
   gameVersion: z.enum(['RE1', 'RE2', 'RE3']),
   difficulty: z.enum(['Easy', 'Normal', 'Hard']),
@@ -47,18 +49,28 @@ const createCampaignSchema = z.object({
 
 export type CreateCampaignForm = z.infer<typeof createCampaignSchema>;
 
+const DEFAULT_VALUES: CreateCampaignForm = {
+  id: undefined,
+  name: '',
+  gameVersion: 'RE1',
+  difficulty: 'Normal',
+};
+
 interface CreateCampaignModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreate: (data: CreateCampaignForm) => void;
+  editingCampaign?: Campaign | null;
 }
 
 export default function CreateCampaignModal({
   isOpen,
   onClose,
   onCreate,
+  editingCampaign,
 }: CreateCampaignModalProps) {
   const resolvedTheme = useResolvedTheme();
+  const isEditing = !!editingCampaign;
   const {
     control,
     handleSubmit,
@@ -66,17 +78,27 @@ export default function CreateCampaignModal({
     formState: { errors, isValid },
   } = useForm<CreateCampaignForm>({
     resolver: zodResolver(createCampaignSchema),
-    defaultValues: {
-      name: '',
-      gameVersion: 'RE1',
-      difficulty: 'Normal',
-    },
+    defaultValues: DEFAULT_VALUES,
     mode: 'onChange',
   });
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (editingCampaign) {
+      reset({
+        id: editingCampaign.id,
+        name: editingCampaign.name,
+        gameVersion: editingCampaign.game,
+        difficulty: editingCampaign.difficulty,
+      });
+    } else {
+      reset(DEFAULT_VALUES);
+    }
+  }, [isOpen, editingCampaign, reset]);
+
   const onSubmit = (data: CreateCampaignForm) => {
     onCreate(data);
-    reset();
     onClose();
   };
 
@@ -85,7 +107,9 @@ export default function CreateCampaignModal({
       <ModalBackdrop />
       <ModalContent className="bg-card">
         <ModalHeader>
-          <Text className="text-foreground text-xl font-semibold">Create New Campaign</Text>
+          <Text className="text-foreground text-xl font-semibold">
+            {isEditing ? 'Edit Campaign' : 'Create New Campaign'}
+          </Text>
           <ModalCloseButton>
             <X color={THEME_COLORS[resolvedTheme].mutedForeground} size={20} />
           </ModalCloseButton>
@@ -122,8 +146,10 @@ export default function CreateCampaignModal({
                 control={control}
                 name="gameVersion"
                 render={({ field: { onChange, value } }) => (
-                  <Select selectedValue={value} onValueChange={onChange}>
-                    <SelectTrigger className="bg-background border-border">
+                  <Select selectedValue={value} onValueChange={onChange} isDisabled={isEditing}>
+                    <SelectTrigger
+                      className={`bg-background border-border${isEditing ? ' opacity-50' : ''}`}
+                    >
                       <SelectInput placeholder="Select version" className="text-foreground" />
                       <SelectIcon />
                     </SelectTrigger>
@@ -183,7 +209,7 @@ export default function CreateCampaignModal({
               onPress={handleSubmit(onSubmit)}
               isDisabled={!isValid}
             >
-              <ButtonText>Create Campaign</ButtonText>
+              <ButtonText>{isEditing ? 'Save Changes' : 'Create Campaign'}</ButtonText>
             </Button>
           </HStack>
         </ModalFooter>
