@@ -85,7 +85,7 @@ export const DiscardedCardsTab: React.FC<DiscardedCardsTabProps> = ({ campaign }
 
       <Pressable
         onPress={() => setIsCategoryModalOpen(true)}
-        className="absolute bottom-8 right-6 bg-destructive w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-90"
+        className="absolute bottom-safe-or-8 right-6 bg-destructive w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-90"
       >
         <Plus color="white" size={26} />
       </Pressable>

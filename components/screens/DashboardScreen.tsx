@@ -137,7 +137,7 @@ export default function DashboardScreen() {
   };
 
   return (
-    <VStack className="flex-1 bg-background">
+    <VStack className="flex-1 bg-background pt-safe">
       {/* Header - Title + theme toggle */}
       <HStack className="px-4 pt-4 pb-2 justify-between items-center">
         <Text className="text-foreground text-3xl font-bold">Campaigns</Text>
@@ -185,7 +185,7 @@ export default function DashboardScreen() {
       {/* Floating Action Button - Only way to create a campaign */}
       <Pressable
         onPress={handleCreateCampaign}
-        className="absolute bottom-8 right-6 bg-destructive w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-90"
+        className="absolute bottom-safe-or-8 right-6 bg-destructive w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-90"
       >
         {/* White reads well on both the light and dark destructive-red shades */}
         <Plus color="white" size={26} />

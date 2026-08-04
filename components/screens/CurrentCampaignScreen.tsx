@@ -16,7 +16,7 @@ export default function CurrentCampaignScreen() {
 
   if (!campaign) {
     return (
-      <VStack className="flex-1 bg-background items-center justify-center p-4">
+      <VStack className="flex-1 bg-background items-center justify-center p-4 pt-safe">
         <Text className="text-muted-foreground">No active campaign selected.</Text>
       </VStack>
     );
@@ -41,7 +41,7 @@ export default function CurrentCampaignScreen() {
   };
 
   return (
-    <VStack className="flex-1 bg-background">
+    <VStack className="flex-1 bg-background pt-safe">
       <CampaignHeader campaign={campaign} />
       <CampaignTabBar activeTab={activeTab} onTabChange={setActiveTab} />
 
