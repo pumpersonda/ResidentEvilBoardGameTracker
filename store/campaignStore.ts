@@ -36,6 +36,7 @@ interface CampaignStore {
   updateActiveCharacterInventory: (characterId: string, item: Item) => void;
   resetActiveCharacterInventory: (characterId: string) => void;
   addItemToBox: (item: Item) => void;
+  removeFromItemsBox: (itemId: string, quantity: number) => void;
   addedCard: (cardType: CardType, card: Card) => void;
   discardCard: (cardType: CardType, card: Card) => void;
   removeFromAddedCards: (cardType: CardType, cardId: string, quantity: number) => void;
@@ -221,7 +222,24 @@ export const useCampaignStore = create<CampaignStore>()(
         set(state => ({
           allCampaigns: state.allCampaigns.map(c => {
             if (c.id !== state.currentCampaignId) return c;
-            return { ...c, itemsBox: [...c.itemsBox, item] };
+            const existingItem = c.itemsBox.find(i => i.id === item.id);
+            const newItemsBox = existingItem
+              ? c.itemsBox.map(i =>
+                  i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+                )
+              : [...c.itemsBox, item];
+            return { ...c, itemsBox: newItemsBox };
+          }),
+        })),
+
+      removeFromItemsBox: (itemId, quantity) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const newItemsBox = c.itemsBox
+              .map(i => (i.id === itemId ? { ...i, quantity: i.quantity - quantity } : i))
+              .filter(i => i.quantity > 0);
+            return { ...c, itemsBox: newItemsBox };
           }),
         })),
 
