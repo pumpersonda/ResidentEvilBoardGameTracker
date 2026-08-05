@@ -70,6 +70,7 @@ export interface ActiveCharacter {
   health: CharacterHealth;
   inventory: Item[];
   kerosene?: number; // RE1
+  isAdvancedVersion: boolean;
 }
 
 export type CardType =

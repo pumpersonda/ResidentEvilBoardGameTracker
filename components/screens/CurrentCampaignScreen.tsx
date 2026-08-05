@@ -6,10 +6,8 @@ import { CampaignTabBar, TabOption } from '@/components/campain/CampaignTabBar';
 import { SummaryTab } from '@/components/campain/tabs/SummaryTab';
 import { DiscardedCardsTab } from '@/components/campain/tabs/DiscardedCardsTab';
 import { ItemBoxTab } from '@/components/campain/tabs/ItemBoxTab';
+import { CharactersTab } from '@/components/campain/tabs/CharactersTab';
 import { CampaignHeader } from '@/components/campain/CampaignHeader';
-
-// TODO: Import your other tabs as you build them
-// import { CharactersTab } from '@/components/campaign/tabs/CharactersTab';
 
 export default function CurrentCampaignScreen() {
   const campaign = useCurrentCampaign();
@@ -29,7 +27,7 @@ export default function CurrentCampaignScreen() {
       case 'Summary':
         return <SummaryTab campaign={campaign} />;
       case 'Characters':
-        return <Text className="text-foreground p-4">Active Characters Roster</Text>; // Replace with <CharactersTab campaign={campaign} />
+        return <CharactersTab campaign={campaign} />;
       case 'ItemBox':
         return <ItemBoxTab campaign={campaign} />;
       case 'Cards':

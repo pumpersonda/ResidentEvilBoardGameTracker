@@ -11,6 +11,7 @@ import {
   Item,
   ScenarioStatus,
 } from '@/types';
+import { CharacterProfile } from '@/data/RE1/characters';
 import { CreateCampaignForm } from '@/components/screens/CreateCampaignModal';
 
 interface CampaignStore {
@@ -31,6 +32,7 @@ interface CampaignStore {
   addActiveCharacter: (activeCharacter: ActiveCharacter) => void;
   removeActiveCharacter: (characterId: string) => void;
   moveCharacterToReserve: (characterId: string) => void;
+  addReserveCharacter: (character: CharacterProfile) => void;
   addItemToActiveCharacter: (characterId: string, item: Item) => void;
   removeItemFromActiveCharacter: (characterId: string, itemId: string) => void;
   updateActiveCharacterInventory: (characterId: string, item: Item) => void;
@@ -156,6 +158,17 @@ export const useCampaignStore = create<CampaignStore>()(
               ...c,
               activeCharacters: c.activeCharacters.filter(ac => ac.character.id !== characterId),
               reserveCharacters: [...c.reserveCharacters, characterToMove.character],
+            };
+          }),
+        })),
+
+      addReserveCharacter: character =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              reserveCharacters: [...c.reserveCharacters, character],
             };
           }),
         })),

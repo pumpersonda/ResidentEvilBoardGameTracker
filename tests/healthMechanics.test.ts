@@ -1,14 +1,20 @@
 import { useCampaignStore } from '@/store/campaignStore';
-import { ActiveCharacter, Character, CharacterHealth, Player } from '@/types';
+import { CharacterProfile } from '@/data/RE1/characters';
+import { ActiveCharacter, CharacterHealth, GameVersion, Player } from '@/types';
 
 const getCurrentCampaign = () => {
   const { allCampaigns, currentCampaignId } = useCampaignStore.getState();
   return allCampaigns.find(c => c.id === currentCampaignId) ?? null;
 };
 
-const makeCharacter = (id: string, name: string): Character => ({
+const makeCharacter = (id: string, name: string): CharacterProfile => ({
   id,
   name,
+  type: 'CharacterProfile',
+  game: GameVersion.RE1,
+  quantity: 1,
+  isAdvanced: false,
+  isReserved: false,
   avatar: { uri: `avatar-${id}` },
 });
 
@@ -26,6 +32,7 @@ const makeActiveCharacter = (
   controlledBy: makePlayer(`player-${characterId}`, `Player ${name}`),
   health,
   inventory: [],
+  isAdvancedVersion: false,
 });
 
 const resetStore = () => {
