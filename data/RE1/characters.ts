@@ -1,0 +1,136 @@
+// Auto-generated from ResEvil1BG_Card_Checklist_v1.0.xlsx
+// Card Type === "Character Profile"
+// Grouped by character. isAdvanced / isReserved indicate available versions.
+// game always GameVersion.RE1
+
+import { Card, GameVersion } from '@/types';
+import { ImageSourcePropType } from 'react-native';
+
+export interface CharacterProfile extends Card {
+  isAdvanced: boolean;
+  isReserved: boolean;
+  avatar: ImageSourcePropType;
+}
+
+export const CHARACTERS_PROFILE: CharacterProfile[] = [
+  {
+    id: 'character-albert-wesker',
+    name: 'Albert Wesker',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: true,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/albert-wesker.png'),
+  },
+  {
+    id: 'character-barry-burton',
+    name: 'Barry Burton',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: false,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/barry-burton.png'),
+  },
+  {
+    id: 'character-brad-vickers',
+    name: 'Brad Vickers',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: true,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/brad-vickers.png'),
+  },
+  {
+    id: 'character-chris-redfield',
+    name: 'Chris Redfield',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: false,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/chris-redfield.png'),
+  },
+  {
+    id: 'character-edward-dewey',
+    name: 'Edward Dewey',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: false,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/edward-dewey.png'),
+  },
+  {
+    id: 'character-enrico-marini',
+    name: 'Enrico Marini',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: true,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/enrico-marini.png'),
+  },
+  {
+    id: 'character-forest-speyer',
+    name: 'Forest Speyer',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: false,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/forest-speyer.png'),
+  },
+  {
+    id: 'character-jill-valentine',
+    name: 'Jill Valentine',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: false,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/jill-valentine.png'),
+  },
+  {
+    id: 'character-joseph-frost',
+    name: 'Joseph Frost',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: false,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/joseph-frost.png'),
+  },
+  {
+    id: 'character-kenneth-j-sullivan',
+    name: 'Kenneth J. Sullivan',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: false,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/kennet-j-sullivan.png'),
+  },
+  {
+    id: 'character-rebecca-chambers',
+    name: 'Rebecca Chambers',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: false,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/rebecca_chambers.png'),
+  },
+  {
+    id: 'character-richard-aiken',
+    name: 'Richard Aiken',
+    type: 'CharacterProfile',
+    isAdvanced: true,
+    isReserved: true,
+    game: GameVersion.RE1,
+    quantity: 1,
+    avatar: require('@/assets/characters_avatars/richard-aiken.png'),
+  },
+];

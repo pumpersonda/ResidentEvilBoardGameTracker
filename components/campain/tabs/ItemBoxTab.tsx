@@ -5,9 +5,9 @@ import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
 import { Card } from '@/components/ui/card';
 import { Pressable } from '@/components/ui/pressable';
-import { Campaign, Item, ItemCategory } from '@/types';
+import { Campaign, Item, ItemCategory, ItemType } from '@/types';
 import { useCampaignStore } from '@/store/campaignStore';
-import { Plus, Trash2 } from 'lucide-react-native';
+import { Minus, Plus, Trash2 } from 'lucide-react-native';
 import { AddItemModal } from './AddItemModal';
 
 interface ItemBoxTabProps {
@@ -20,6 +20,7 @@ export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const addItemToBox = useCampaignStore(state => state.addItemToBox);
   const removeFromItemsBox = useCampaignStore(state => state.removeFromItemsBox);
+  const updateItemAmmunition = useCampaignStore(state => state.updateItemAmmunition);
 
   const categories = CATEGORY_ORDER.map(
     category =>
@@ -47,32 +48,65 @@ export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
               <VStack key={category} space="sm">
                 <Text className="text-foreground text-xl font-bold">Category {category}</Text>
 
-                {items.map(item => (
-                  <Card
-                    key={item.id}
-                    className="bg-card border border-border p-4 rounded-2xl text-center"
-                  >
-                    <HStack className="justify-between items-start">
-                      <VStack className="flex-1">
-                        <Text className="text-foreground font-semibold">{item.name}</Text>
-                        <Text className="text-muted-foreground text-sm capitalize">
-                          {item.itemType}
-                          {item.ammunition ? ` · ${item.ammunition} rounds` : ''}
+                {items.map(item => {
+                  const isWeaponWithAmmo =
+                    item.itemType === ItemType.Weapon && item.ammunition !== undefined;
+
+                  return (
+                    <Card
+                      key={item.id}
+                      className="bg-card border border-border p-4 rounded-2xl text-center"
+                    >
+                      <HStack className="justify-between items-start">
+                        <VStack className="flex-1">
+                          <Text className="text-foreground font-semibold">{item.name}</Text>
+                          <Text className="text-muted-foreground text-sm capitalize">
+                            {item.itemType}
+                          </Text>
+                        </VStack>
+                        <Text className="text-muted-foreground font-semibold ml-2">
+                          x{item.quantity}
                         </Text>
-                      </VStack>
-                      <Text className="text-muted-foreground font-semibold ml-2">
-                        x{item.quantity}
-                      </Text>
-                      <Pressable
-                        onPress={() => onDelete(item.id)}
-                        className="px-3 rounded-full active:bg-destructive/10"
-                        accessibilityLabel="Remove item"
-                      >
-                        <Trash2 color="gray" size={20} />
-                      </Pressable>
-                    </HStack>
-                  </Card>
-                ))}
+                        <Pressable
+                          onPress={() => onDelete(item.id)}
+                          className="px-3 rounded-full active:bg-destructive/10"
+                          accessibilityLabel="Remove item"
+                        >
+                          <Trash2 color="gray" size={20} />
+                        </Pressable>
+                      </HStack>
+
+                      {isWeaponWithAmmo && (
+                        <HStack className="items-center justify-center mt-3 gap-4">
+                          <Pressable
+                            onPress={() =>
+                              updateItemAmmunition(item.id, (item.ammunition ?? 0) - 1)
+                            }
+                            disabled={item.ammunition === 0}
+                            className={`w-8 h-8 rounded-full items-center justify-center bg-muted ${
+                              item.ammunition === 0 ? 'opacity-40' : 'active:opacity-70'
+                            }`}
+                            accessibilityLabel="Decrease ammunition"
+                          >
+                            <Minus color="gray" size={16} />
+                          </Pressable>
+                          <Text className="text-foreground font-semibold min-w-[80px] text-center">
+                            {item.ammunition} rounds
+                          </Text>
+                          <Pressable
+                            onPress={() =>
+                              updateItemAmmunition(item.id, (item.ammunition ?? 0) + 1)
+                            }
+                            className="w-8 h-8 rounded-full items-center justify-center bg-muted active:opacity-70"
+                            accessibilityLabel="Increase ammunition"
+                          >
+                            <Plus color="gray" size={16} />
+                          </Pressable>
+                        </HStack>
+                      )}
+                    </Card>
+                  );
+                })}
               </VStack>
             ))}
           </VStack>

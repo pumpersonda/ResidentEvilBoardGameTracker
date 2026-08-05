@@ -37,6 +37,7 @@ interface CampaignStore {
   resetActiveCharacterInventory: (characterId: string) => void;
   addItemToBox: (item: Item) => void;
   removeFromItemsBox: (itemId: string, quantity: number) => void;
+  updateItemAmmunition: (itemId: string, ammunition: number) => void;
   addedCard: (cardType: CardType, card: Card) => void;
   discardCard: (cardType: CardType, card: Card) => void;
   removeFromAddedCards: (cardType: CardType, cardId: string, quantity: number) => void;
@@ -239,6 +240,17 @@ export const useCampaignStore = create<CampaignStore>()(
             const newItemsBox = c.itemsBox
               .map(i => (i.id === itemId ? { ...i, quantity: i.quantity - quantity } : i))
               .filter(i => i.quantity > 0);
+            return { ...c, itemsBox: newItemsBox };
+          }),
+        })),
+
+      updateItemAmmunition: (itemId, ammunition) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const newItemsBox = c.itemsBox.map(i =>
+              i.id === itemId ? { ...i, ammunition: Math.max(0, ammunition) } : i
+            );
             return { ...c, itemsBox: newItemsBox };
           }),
         })),

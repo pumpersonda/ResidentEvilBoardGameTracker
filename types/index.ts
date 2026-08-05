@@ -1,4 +1,4 @@
-import { ImageSourcePropType } from 'react-native';
+import { CharacterProfile } from '@/data/RE1/characters';
 
 // Single source of truth for registered UniWind themes.
 // Adding a theme: append it here, add its CSS vars in global.css,
@@ -13,11 +13,6 @@ export enum GameVersion {
   RE3 = 'RE3',
 }
 
-export interface Character {
-  id: string;
-  name: string;
-  avatar: ImageSourcePropType;
-}
 
 export interface Player {
   id: string;
@@ -70,14 +65,15 @@ export interface Item extends Card {
 }
 
 export interface ActiveCharacter {
-  character: Character;
+  character: CharacterProfile;
   controlledBy: Player;
   health: CharacterHealth;
   inventory: Item[];
   kerosene?: number; // RE1
 }
 
-export type CardType = 'Item' | 'Encounter' | 'Narrative' | 'Mission' | 'Tension' | 'Map' | 'Boss';
+export type CardType =
+  'Item' | 'Encounter' | 'Narrative' | 'Mission' | 'Tension' | 'Map' | 'Boss' | 'CharacterProfile';
 
 export interface Card {
   id: string;
@@ -103,7 +99,7 @@ export interface Campaign {
   difficulty: 'Easy' | 'Normal' | 'Hard';
   dangerLevel: number;
   activeCharacters: ActiveCharacter[];
-  reserveCharacters: Character[];
+  reserveCharacters: CharacterProfile[];
   itemsBox: Item[];
   addedCards: Partial<Record<CardType, Card[]>>;
   discardedCards: Partial<Record<CardType, Card[]>>;
