@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
@@ -14,7 +14,43 @@ interface ItemBoxTabProps {
   campaign: Campaign;
 }
 
+interface ItemHolder {
+  characterName: string;
+  quantity: number;
+}
+
+interface ItemBoxEntry {
+  item: Item;
+  boxQuantity: number;
+  holders: ItemHolder[];
+}
+
 const CATEGORY_ORDER: ItemCategory[] = ['S', 'A', 'B', 'C'];
+
+function buildItemBoxEntries(campaign: Campaign): ItemBoxEntry[] {
+  const entries = new Map<string, ItemBoxEntry>();
+
+  for (const item of campaign.itemsBox) {
+    entries.set(item.id, { item, boxQuantity: item.quantity, holders: [] });
+  }
+
+  for (const activeCharacter of campaign.activeCharacters) {
+    for (const item of activeCharacter.inventory) {
+      const existing = entries.get(item.id);
+      const holder: ItemHolder = {
+        characterName: activeCharacter.character.name,
+        quantity: item.quantity,
+      };
+      if (existing) {
+        existing.holders.push(holder);
+      } else {
+        entries.set(item.id, { item, boxQuantity: 0, holders: [holder] });
+      }
+    }
+  }
+
+  return Array.from(entries.values());
+}
 
 export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -22,14 +58,16 @@ export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
   const removeFromItemsBox = useCampaignStore(state => state.removeFromItemsBox);
   const updateItemAmmunition = useCampaignStore(state => state.updateItemAmmunition);
 
+  const itemBoxEntries = useMemo(() => buildItemBoxEntries(campaign), [campaign]);
+
   const categories = CATEGORY_ORDER.map(
     category =>
-      [category, campaign.itemsBox.filter(item => item.category === category)] as [
+      [category, itemBoxEntries.filter(entry => entry.item.category === category)] as [
         ItemCategory,
-        Item[],
+        ItemBoxEntry[],
       ]
   );
-  const nonEmptyCategories = categories.filter(([, items]) => items.length > 0);
+  const nonEmptyCategories = categories.filter(([, entries]) => entries.length > 0);
 
   const onDelete = (itemId: string) => {
     removeFromItemsBox(itemId, 1);
@@ -44,13 +82,15 @@ export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
           </VStack>
         ) : (
           <VStack space="lg" className="pb-24">
-            {nonEmptyCategories.map(([category, items]) => (
+            {nonEmptyCategories.map(([category, entries]) => (
               <VStack key={category} space="sm">
                 <Text className="text-foreground text-xl font-bold">Category {category}</Text>
 
-                {items.map(item => {
+                {entries.map(({ item, boxQuantity, holders }) => {
                   const isWeaponWithAmmo =
-                    item.itemType === ItemType.Weapon && item.ammunition !== undefined;
+                    boxQuantity > 0 &&
+                    item.itemType === ItemType.Weapon &&
+                    item.ammunition !== undefined;
 
                   return (
                     <Card
@@ -63,13 +103,28 @@ export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
                           <Text className="text-muted-foreground text-sm capitalize">
                             {item.itemType}
                           </Text>
+                          {holders.length > 0 && (
+                            <HStack className="flex-wrap gap-1 mt-2">
+                              {holders.map((holder, index) => (
+                                <Text
+                                  key={`${holder.characterName}-${index}`}
+                                  className="text-muted-foreground text-xs font-semibold px-2 py-0.5 border border-border rounded-full"
+                                >
+                                  {holder.characterName} x{holder.quantity}
+                                </Text>
+                              ))}
+                            </HStack>
+                          )}
                         </VStack>
                         <Text className="text-muted-foreground font-semibold ml-2">
-                          x{item.quantity}
+                          x{boxQuantity}
                         </Text>
                         <Pressable
                           onPress={() => onDelete(item.id)}
-                          className="px-3 rounded-full active:bg-destructive/10"
+                          disabled={boxQuantity === 0}
+                          className={`px-3 rounded-full active:bg-destructive/10 ${
+                            boxQuantity === 0 ? 'opacity-30' : ''
+                          }`}
                           accessibilityLabel="Remove item"
                         >
                           <Trash2 color="gray" size={20} />

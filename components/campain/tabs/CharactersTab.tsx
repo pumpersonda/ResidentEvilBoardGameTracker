@@ -10,6 +10,7 @@ import { useCampaignStore } from '@/store/campaignStore';
 import { Pencil, Plus, Trash2 } from 'lucide-react-native';
 import { SelectCharacterModal } from './SelectCharacterModal';
 import { EditCharacterModal } from './EditCharacterModal';
+import { CharacterDetailsModal } from './CharacterDetailsModal';
 
 interface CharactersTabProps {
   campaign: Campaign;
@@ -18,10 +19,13 @@ interface CharactersTabProps {
 export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [editingCharacterId, setEditingCharacterId] = useState<string | null>(null);
+  const [viewingCharacterId, setViewingCharacterId] = useState<string | null>(null);
   const removeActiveCharacter = useCampaignStore(state => state.removeActiveCharacter);
 
   const editingCharacter: ActiveCharacter | null =
     campaign.activeCharacters.find(ac => ac.character.id === editingCharacterId) ?? null;
+  const viewingCharacter: ActiveCharacter | null =
+    campaign.activeCharacters.find(ac => ac.character.id === viewingCharacterId) ?? null;
 
   const hasActiveCharacters = campaign.activeCharacters.length > 0;
   const hasReserveCharacters = campaign.reserveCharacters.length > 0;
@@ -39,51 +43,65 @@ export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
               <VStack space="sm">
                 <Text className="text-foreground text-xl font-bold">Active Roster</Text>
 
-                {campaign.activeCharacters.map(activeCharacter => (
-                  <Card
-                    key={activeCharacter.character.id}
-                    className="bg-card border border-border p-4 rounded-2xl"
-                  >
-                    <HStack space="md" className="items-center">
-                      <Image
-                        source={activeCharacter.character.avatar}
-                        className="w-12 h-12 rounded-full bg-muted"
-                      />
-                      <VStack className="flex-1">
-                        <HStack space="sm" className="items-center">
-                          <Text className="text-foreground font-semibold">
-                            {activeCharacter.character.name}
-                          </Text>
-                          {activeCharacter.isAdvancedVersion && (
-                            <Text className="text-destructive text-xs font-semibold px-2 py-0.5 border border-destructive rounded-full">
-                              Advanced
+                {campaign.activeCharacters.map(activeCharacter => {
+                  const itemCount = activeCharacter.inventory.reduce(
+                    (total, item) => total + item.quantity,
+                    0
+                  );
+
+                  return (
+                    <Pressable
+                      key={activeCharacter.character.id}
+                      onPress={() => setViewingCharacterId(activeCharacter.character.id)}
+                      accessibilityLabel={`View ${activeCharacter.character.name} details`}
+                    >
+                      <Card className="bg-card border border-border p-4 rounded-2xl">
+                        <HStack space="md" className="items-center">
+                          <Image
+                            source={activeCharacter.character.avatar}
+                            className="w-12 h-12 rounded-full bg-muted"
+                          />
+                          <VStack className="flex-1">
+                            <HStack space="sm" className="items-center">
+                              <Text className="text-foreground font-semibold">
+                                {activeCharacter.character.name}
+                              </Text>
+                              {activeCharacter.isAdvancedVersion && (
+                                <Text className="text-destructive text-xs font-semibold px-2 py-0.5 border border-destructive rounded-full">
+                                  Advanced
+                                </Text>
+                              )}
+                            </HStack>
+                            <Text className="text-muted-foreground text-sm">
+                              {activeCharacter.controlledBy.realName ||
+                                activeCharacter.character.name}
                             </Text>
-                          )}
+                            <Text className="text-muted-foreground text-xs">
+                              {HEALTH_LABELS[activeCharacter.health.value]}
+                            </Text>
+                            <Text className="text-muted-foreground text-xs">
+                              {itemCount === 0 ? 'No items' : `${itemCount} items carried`}
+                            </Text>
+                          </VStack>
+                          <Pressable
+                            onPress={() => setEditingCharacterId(activeCharacter.character.id)}
+                            className="px-3 rounded-full active:bg-muted"
+                            accessibilityLabel="Edit character"
+                          >
+                            <Pencil color="gray" size={20} />
+                          </Pressable>
+                          <Pressable
+                            onPress={() => removeActiveCharacter(activeCharacter.character.id)}
+                            className="px-3 rounded-full active:bg-destructive/10"
+                            accessibilityLabel="Remove character"
+                          >
+                            <Trash2 color="gray" size={20} />
+                          </Pressable>
                         </HStack>
-                        <Text className="text-muted-foreground text-sm">
-                          {activeCharacter.controlledBy.realName || activeCharacter.character.name}
-                        </Text>
-                        <Text className="text-muted-foreground text-xs">
-                          {HEALTH_LABELS[activeCharacter.health.value]}
-                        </Text>
-                      </VStack>
-                      <Pressable
-                        onPress={() => setEditingCharacterId(activeCharacter.character.id)}
-                        className="px-3 rounded-full active:bg-muted"
-                        accessibilityLabel="Edit character"
-                      >
-                        <Pencil color="gray" size={20} />
-                      </Pressable>
-                      <Pressable
-                        onPress={() => removeActiveCharacter(activeCharacter.character.id)}
-                        className="px-3 rounded-full active:bg-destructive/10"
-                        accessibilityLabel="Remove character"
-                      >
-                        <Trash2 color="gray" size={20} />
-                      </Pressable>
-                    </HStack>
-                  </Card>
-                ))}
+                      </Card>
+                    </Pressable>
+                  );
+                })}
               </VStack>
             )}
 
@@ -123,6 +141,13 @@ export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
         onClose={() => setEditingCharacterId(null)}
         campaign={campaign}
         activeCharacter={editingCharacter}
+      />
+
+      <CharacterDetailsModal
+        isOpen={viewingCharacter !== null}
+        onClose={() => setViewingCharacterId(null)}
+        campaign={campaign}
+        activeCharacter={viewingCharacter}
       />
     </VStack>
   );
