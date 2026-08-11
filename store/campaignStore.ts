@@ -34,9 +34,10 @@ interface CampaignStore {
   moveCharacterToReserve: (characterId: string) => void;
   addReserveCharacter: (character: CharacterProfile) => void;
   addItemToActiveCharacter: (characterId: string, item: Item) => void;
-  removeItemFromActiveCharacter: (characterId: string, itemId: string) => void;
+  removeItemFromActiveCharacter: (characterId: string, itemId: string, quantity: number) => void;
   updateActiveCharacterInventory: (characterId: string, item: Item) => void;
   resetActiveCharacterInventory: (characterId: string) => void;
+  updateActiveCharacterPlayerName: (characterId: string, realName: string) => void;
   addItemToBox: (item: Item) => void;
   removeFromItemsBox: (itemId: string, quantity: number) => void;
   updateItemAmmunition: (itemId: string, ammunition: number) => void;
@@ -173,20 +174,7 @@ export const useCampaignStore = create<CampaignStore>()(
           }),
         })),
 
-      addItemToActiveCharacter: (characterId, item) =>
-        set(state => ({
-          allCampaigns: state.allCampaigns.map(c => {
-            if (c.id !== state.currentCampaignId) return c;
-            return {
-              ...c,
-              activeCharacters: c.activeCharacters.map(ac =>
-                ac.character.id === characterId ? { ...ac, inventory: [...ac.inventory, item] } : ac
-              ),
-            };
-          }),
-        })),
-
-      removeItemFromActiveCharacter: (characterId, itemId) =>
+      updateActiveCharacterPlayerName: (characterId, realName) =>
         set(state => ({
           allCampaigns: state.allCampaigns.map(c => {
             if (c.id !== state.currentCampaignId) return c;
@@ -194,9 +182,46 @@ export const useCampaignStore = create<CampaignStore>()(
               ...c,
               activeCharacters: c.activeCharacters.map(ac =>
                 ac.character.id === characterId
-                  ? { ...ac, inventory: ac.inventory.filter(i => i.id !== itemId) }
+                  ? { ...ac, controlledBy: { ...ac.controlledBy, realName } }
                   : ac
               ),
+            };
+          }),
+        })),
+
+      addItemToActiveCharacter: (characterId, item) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.map(ac => {
+                if (ac.character.id !== characterId) return ac;
+                const existingItem = ac.inventory.find(i => i.id === item.id);
+                const newInventory = existingItem
+                  ? ac.inventory.map(i =>
+                      i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+                    )
+                  : [...ac.inventory, item];
+                return { ...ac, inventory: newInventory };
+              }),
+            };
+          }),
+        })),
+
+      removeItemFromActiveCharacter: (characterId, itemId, quantity) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.map(ac => {
+                if (ac.character.id !== characterId) return ac;
+                const newInventory = ac.inventory
+                  .map(i => (i.id === itemId ? { ...i, quantity: i.quantity - quantity } : i))
+                  .filter(i => i.quantity > 0);
+                return { ...ac, inventory: newInventory };
+              }),
             };
           }),
         })),

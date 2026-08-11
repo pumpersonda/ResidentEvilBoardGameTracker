@@ -5,10 +5,11 @@ import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
 import { Card } from '@/components/ui/card';
 import { Pressable } from '@/components/ui/pressable';
-import { Campaign, HEALTH_LABELS } from '@/types';
+import { ActiveCharacter, Campaign, HEALTH_LABELS } from '@/types';
 import { useCampaignStore } from '@/store/campaignStore';
-import { Plus, Trash2 } from 'lucide-react-native';
+import { Pencil, Plus, Trash2 } from 'lucide-react-native';
 import { SelectCharacterModal } from './SelectCharacterModal';
+import { EditCharacterModal } from './EditCharacterModal';
 
 interface CharactersTabProps {
   campaign: Campaign;
@@ -16,7 +17,11 @@ interface CharactersTabProps {
 
 export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
+  const [editingCharacterId, setEditingCharacterId] = useState<string | null>(null);
   const removeActiveCharacter = useCampaignStore(state => state.removeActiveCharacter);
+
+  const editingCharacter: ActiveCharacter | null =
+    campaign.activeCharacters.find(ac => ac.character.id === editingCharacterId) ?? null;
 
   const hasActiveCharacters = campaign.activeCharacters.length > 0;
   const hasReserveCharacters = campaign.reserveCharacters.length > 0;
@@ -63,6 +68,13 @@ export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
                         </Text>
                       </VStack>
                       <Pressable
+                        onPress={() => setEditingCharacterId(activeCharacter.character.id)}
+                        className="px-3 rounded-full active:bg-muted"
+                        accessibilityLabel="Edit character"
+                      >
+                        <Pencil color="gray" size={20} />
+                      </Pressable>
+                      <Pressable
                         onPress={() => removeActiveCharacter(activeCharacter.character.id)}
                         className="px-3 rounded-full active:bg-destructive/10"
                         accessibilityLabel="Remove character"
@@ -104,6 +116,13 @@ export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
         isOpen={isSelectModalOpen}
         onClose={() => setIsSelectModalOpen(false)}
         campaign={campaign}
+      />
+
+      <EditCharacterModal
+        isOpen={editingCharacter !== null}
+        onClose={() => setEditingCharacterId(null)}
+        campaign={campaign}
+        activeCharacter={editingCharacter}
       />
     </VStack>
   );
