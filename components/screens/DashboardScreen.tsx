@@ -3,9 +3,10 @@ import { Pressable, ScrollView } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
-import { Biohazard, MonitorSmartphone, Moon, Plus, Sun } from 'lucide-react-native';
+import { Biohazard, Info, MonitorSmartphone, Moon, Plus, Sun } from 'lucide-react-native';
 import CampaignCard from '@/components/campain/CampaignCard';
 import CreateCampaignModal, { CreateCampaignForm } from '@/components/screens/CreateCampaignModal';
+import DisclaimerModal from '@/components/screens/DisclaimerModal';
 import {
   AlertDialog,
   AlertDialogBackdrop,
@@ -41,6 +42,7 @@ const THEME_MODE_ICON = {
 
 export default function DashboardScreen() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
   const [campaignBeingEdited, setCampaignBeingEdited] = useState<Campaign | null>(null);
   const [campaignPendingDeletion, setCampaignPendingDeletion] = useState<{
     id: string;
@@ -141,12 +143,21 @@ export default function DashboardScreen() {
       {/* Header - Title + theme toggle */}
       <HStack className="px-4 pt-4 pb-2 justify-between items-center">
         <Text className="text-foreground text-3xl font-bold">Campaigns</Text>
-        <Pressable
-          onPress={handleCycleTheme}
-          className="p-2 rounded-full bg-secondary active:opacity-80"
-        >
-          <ThemeModeIcon color={THEME_COLORS[resolvedTheme].foreground} size={20} />
-        </Pressable>
+        <HStack space="sm">
+          <Pressable
+            onPress={() => setIsDisclaimerOpen(true)}
+            className="p-2 rounded-full bg-secondary active:opacity-80"
+            accessibilityLabel="Legal disclaimer"
+          >
+            <Info color={THEME_COLORS[resolvedTheme].foreground} size={20} />
+          </Pressable>
+          <Pressable
+            onPress={handleCycleTheme}
+            className="p-2 rounded-full bg-secondary active:opacity-80"
+          >
+            <ThemeModeIcon color={THEME_COLORS[resolvedTheme].foreground} size={20} />
+          </Pressable>
+        </HStack>
       </HStack>
 
       {/* Content */}
@@ -195,6 +206,10 @@ export default function DashboardScreen() {
         onClose={handleCloseCampaignModal}
         onCreate={handleCampaignCreated}
         editingCampaign={campaignBeingEdited}
+      />
+      <DisclaimerModal
+        isOpen={isDisclaimerOpen}
+        onClose={() => setIsDisclaimerOpen(false)}
       />
 
       <AlertDialog
