@@ -26,12 +26,7 @@ interface AddItemModalProps {
   onAddItem: (item: Item) => void;
 }
 
-export const AddItemModal: React.FC<AddItemModalProps> = ({
-  isOpen,
-  onClose,
-  game,
-  onAddItem,
-}) => {
+export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, game, onAddItem }) => {
   const resolvedTheme = useResolvedTheme();
   const [query, setQuery] = useState('');
 

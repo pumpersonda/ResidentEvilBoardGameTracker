@@ -112,7 +112,10 @@ export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
                 {campaign.reserveCharacters.map(character => (
                   <Card key={character.id} className="bg-card border border-border p-4 rounded-2xl">
                     <HStack space="md" className="items-center">
-                      <Image source={character.avatar} className="w-12 h-12 rounded-full bg-muted" />
+                      <Image
+                        source={character.avatar}
+                        className="w-12 h-12 rounded-full bg-muted"
+                      />
                       <Text className="text-foreground font-semibold">{character.name}</Text>
                     </HStack>
                   </Card>

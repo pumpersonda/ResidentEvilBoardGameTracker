@@ -31,10 +31,10 @@ export default function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProp
               progress for the &quot;Resident Evil: The Board Game&quot; tabletop series.
             </Text>
             <Text className="text-muted-foreground">
-              Resident Evil, all related characters, names, logos, and imagery are trademarks
-              and/or copyrights of Capcom Co., Ltd. This app is not affiliated with, endorsed
-              by, or sponsored by Capcom or the board game&apos;s publisher. No copyright
-              infringement is intended.
+              Resident Evil, all related characters, names, logos, and imagery are trademarks and/or
+              copyrights of Capcom Co., Ltd. This app is not affiliated with, endorsed by, or
+              sponsored by Capcom or the board game&apos;s publisher. No copyright infringement is
+              intended.
             </Text>
             <Text className="text-muted-foreground">
               All data entered is stored locally on your device only; nothing is collected or

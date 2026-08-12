@@ -207,10 +207,7 @@ export default function DashboardScreen() {
         onCreate={handleCampaignCreated}
         editingCampaign={campaignBeingEdited}
       />
-      <DisclaimerModal
-        isOpen={isDisclaimerOpen}
-        onClose={() => setIsDisclaimerOpen(false)}
-      />
+      <DisclaimerModal isOpen={isDisclaimerOpen} onClose={() => setIsDisclaimerOpen(false)} />
 
       <AlertDialog
         isOpen={campaignPendingDeletion !== null}
