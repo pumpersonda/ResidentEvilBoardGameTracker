@@ -4,7 +4,7 @@ import { Text } from '@/components/ui/text';
 import { useCurrentCampaign } from '@/store/campaignStore';
 import { CampaignTabBar, TabOption } from '@/components/campain/CampaignTabBar';
 import { SummaryTab } from '@/components/campain/tabs/SummaryTab';
-import { DiscardedCardsTab } from '@/components/campain/tabs/DiscardedCardsTab';
+import { CardsTab } from '@/components/campain/tabs/CardsTab';
 import { ItemBoxTab } from '@/components/campain/tabs/ItemBoxTab';
 import { CharactersTab } from '@/components/campain/tabs/CharactersTab';
 import { ScenariosTab } from '@/components/campain/tabs/ScenariosTab';
@@ -32,7 +32,7 @@ export default function CurrentCampaignScreen() {
       case 'ItemBox':
         return <ItemBoxTab campaign={campaign} />;
       case 'Cards':
-        return <DiscardedCardsTab campaign={campaign} />;
+        return <CardsTab campaign={campaign} />;
       case 'Scenarios':
         return <ScenariosTab campaign={campaign} />;
       default:
