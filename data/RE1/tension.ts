@@ -1,6 +1,6 @@
-import { Card, GameVersion } from '@/types';
+import { Card, GameVersion, ThreatColor } from '@/types';
 
-export type TensionColor = 'Green' | 'Amber' | 'Red';
+export type TensionColor = ThreatColor;
 
 export interface TensionCard extends Card {
   quote: string;

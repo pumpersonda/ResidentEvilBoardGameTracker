@@ -7,11 +7,13 @@ import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
+import { GameVersion } from '@/types';
+import { DANGER_LEVEL_BADGE_CLASSES, getDangerLevelColor } from '@/constants/dangerLevel';
 
 export interface CampaignCardProps {
   id: string;
   name: string;
-  game: string;
+  game: GameVersion;
   difficulty: string;
   dangerLevel: number;
   onPress: (id: string) => void;
@@ -30,6 +32,7 @@ export default function CampaignCard({
   onDelete,
 }: CampaignCardProps) {
   const resolvedTheme = useResolvedTheme();
+  const dangerColor = getDangerLevelColor(game, dangerLevel);
 
   return (
     <Pressable key={id} onPress={() => onPress(id)}>
@@ -49,9 +52,14 @@ export default function CampaignCard({
           </HStack>
 
           <HStack className="justify-between items-center">
-            <Text className="text-muted-foreground">
-              {difficulty} • Danger: {dangerLevel}
-            </Text>
+            <Text className="text-muted-foreground">{difficulty}</Text>
+            {dangerColor && (
+              <Text
+                className={`text-xs font-semibold px-2 py-0.5 border rounded-full ${DANGER_LEVEL_BADGE_CLASSES[dangerColor]}`}
+              >
+                {dangerLevel}
+              </Text>
+            )}
           </HStack>
         </VStack>
       </Card>

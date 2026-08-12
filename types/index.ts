@@ -15,6 +15,9 @@ export enum GameVersion {
 
 export type GameExpansion = 'Core Box' | 'Bleak Outpost' | 'Into The Darkness';
 
+// Shared traffic-light color scale used by Tension cards and the Danger Level dial
+export type ThreatColor = 'Green' | 'Amber' | 'Red';
+
 export interface Player {
   id: string;
   realName: string;
