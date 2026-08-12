@@ -1,6 +1,7 @@
 import { Card, CardType, GameVersion } from '@/types';
-import { RE1_CARDS } from './RE1';
+import { RE1_CARDS, RE1_SCENARIOS } from './RE1';
 import { CHARACTERS_PROFILE, CharacterProfile } from './RE1/characters';
+import { ScenarioDefinition } from './RE1/scenarios';
 
 const CARDS_BY_GAME: Record<GameVersion, Partial<Record<CardType, Card[]>>> = {
   [GameVersion.RE1]: RE1_CARDS,
@@ -10,6 +11,12 @@ const CARDS_BY_GAME: Record<GameVersion, Partial<Record<CardType, Card[]>>> = {
 
 const CHARACTERS_BY_GAME: Record<GameVersion, CharacterProfile[]> = {
   [GameVersion.RE1]: CHARACTERS_PROFILE,
+  [GameVersion.RE2]: [],
+  [GameVersion.RE3]: [],
+};
+
+const SCENARIOS_BY_GAME: Record<GameVersion, ScenarioDefinition[]> = {
+  [GameVersion.RE1]: RE1_SCENARIOS,
   [GameVersion.RE2]: [],
   [GameVersion.RE3]: [],
 };
@@ -28,3 +35,7 @@ export const getGameCardData = (
 /** All known card definitions for a game, grouped by category. */
 export const getGameCards = (game: GameVersion): Partial<Record<CardType, Card[]>> =>
   CARDS_BY_GAME[game];
+
+/** All scenario definitions for a game. */
+export const getGameScenarios = (game: GameVersion): ScenarioDefinition[] =>
+  SCENARIOS_BY_GAME[game];

@@ -9,10 +9,12 @@ import {
   CharacterHealth,
   GameVersion,
   Item,
+  Scenario,
   ScenarioStatus,
 } from '@/types';
 import { CharacterProfile } from '@/data/RE1/characters';
 import { CreateCampaignForm } from '@/components/screens/CreateCampaignModal';
+import { getGameScenarios } from '@/data';
 
 interface CampaignStore {
   currentCampaignId: string | null;
@@ -28,6 +30,7 @@ interface CampaignStore {
   // Fast gameplay actions
   setDangerLevel: (level: number) => void;
   updateScenarioStatus: (scenarioId: string, status: ScenarioStatus) => void;
+  unlockScenario: (scenarioId: string) => void;
   updateActiveCharacterHealth: (characterId: string, health: CharacterHealth) => void;
   addActiveCharacter: (activeCharacter: ActiveCharacter) => void;
   removeActiveCharacter: (characterId: string) => void;
@@ -56,16 +59,24 @@ export const useCampaignStore = create<CampaignStore>()(
       createCampaign: formData =>
         set(state => {
           // Generate a unique ID and append all starting campaign defaults
+          const game = formData.gameVersion as GameVersion;
+          const scenarios: Scenario[] = getGameScenarios(game).map(definition => ({
+            id: definition.id,
+            name: definition.name,
+            expansion: definition.expansion,
+            status: definition.isLocked ? 'Locked' : 'Unlocked',
+          }));
+
           const newCampaign: Campaign = {
             id: Math.random().toString(36).substring(2, 9), // Simple local ID
             name: formData.name,
-            game: formData.gameVersion as GameVersion,
+            game,
             difficulty: formData.difficulty,
             dangerLevel: 0, // Starts at zero threat
             activeCharacters: [], // Empty roster at the beginning
             reserveCharacters: [],
             itemsBox: [], // Inventory box starts empty
-            scenarios: [], // TODO: Load initial scenarios based on the game version
+            scenarios,
             discardedCards: {},
             addedCards: {},
             createdAt: new Date().toISOString(),
@@ -109,6 +120,19 @@ export const useCampaignStore = create<CampaignStore>()(
             return {
               ...c,
               scenarios: c.scenarios.map(s => (s.id === scenarioId ? { ...s, status } : s)),
+            };
+          }),
+        })),
+
+      unlockScenario: scenarioId =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              scenarios: c.scenarios.map(s =>
+                s.id === scenarioId && s.status === 'Locked' ? { ...s, status: 'Unlocked' } : s
+              ),
             };
           }),
         })),

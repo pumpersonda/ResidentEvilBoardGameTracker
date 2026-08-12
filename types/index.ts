@@ -13,6 +13,7 @@ export enum GameVersion {
   RE3 = 'RE3',
 }
 
+export type GameExpansion = 'Core Box' | 'Bleak Outpost' | 'Into The Darkness';
 
 export interface Player {
   id: string;
@@ -90,6 +91,7 @@ export type ScenarioStatus = 'Locked' | 'Unlocked' | 'Completed';
 export interface Scenario {
   id: string;
   name: string;
+  expansion: GameExpansion;
   status: ScenarioStatus;
 }
 

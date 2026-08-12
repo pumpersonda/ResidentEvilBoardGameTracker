@@ -7,6 +7,7 @@ import { SummaryTab } from '@/components/campain/tabs/SummaryTab';
 import { DiscardedCardsTab } from '@/components/campain/tabs/DiscardedCardsTab';
 import { ItemBoxTab } from '@/components/campain/tabs/ItemBoxTab';
 import { CharactersTab } from '@/components/campain/tabs/CharactersTab';
+import { ScenariosTab } from '@/components/campain/tabs/ScenariosTab';
 import { CampaignHeader } from '@/components/campain/CampaignHeader';
 
 export default function CurrentCampaignScreen() {
@@ -33,7 +34,7 @@ export default function CurrentCampaignScreen() {
       case 'Cards':
         return <DiscardedCardsTab campaign={campaign} />;
       case 'Scenarios':
-        return <Text className="text-foreground p-4">Scenario Tracker</Text>; // Replace with <ScenariosTab campaign={campaign} />
+        return <ScenariosTab campaign={campaign} />
       default:
         return null;
     }
