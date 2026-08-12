@@ -56,19 +56,20 @@ const sliderFilledTrackStyle = tva({
 
 type ISliderProps = React.ComponentProps<typeof UISlider> & VariantProps<typeof sliderStyle>;
 
-const Slider = React.forwardRef<React.ComponentRef<typeof UISlider>, ISliderProps>(
-  function Slider({ className, orientation = 'horizontal', ...props }, ref) {
-    return (
-      <UISlider
-        ref={ref}
-        orientation={orientation}
-        {...props}
-        className={sliderStyle({ orientation, class: className })}
-        context={{ orientation }}
-      />
-    );
-  }
-);
+const Slider = React.forwardRef<React.ComponentRef<typeof UISlider>, ISliderProps>(function Slider(
+  { className, orientation = 'horizontal', ...props },
+  ref
+) {
+  return (
+    <UISlider
+      ref={ref}
+      orientation={orientation}
+      {...props}
+      className={sliderStyle({ orientation, class: className })}
+      context={{ orientation }}
+    />
+  );
+});
 
 type ISliderThumbProps = React.ComponentProps<typeof UISlider.Thumb> &
   VariantProps<typeof sliderThumbStyle>;

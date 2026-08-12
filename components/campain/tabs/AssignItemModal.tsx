@@ -90,9 +90,7 @@ export const AssignItemModal: React.FC<AssignItemModalProps> = ({
             {visibleItems.length === 0 ? (
               <VStack className="items-center justify-center py-16">
                 <Text className="text-muted-foreground text-center">
-                  {normalizedQuery
-                    ? `No items match "${query.trim()}".`
-                    : 'The item box is empty.'}
+                  {normalizedQuery ? `No items match "${query.trim()}".` : 'The item box is empty.'}
                 </Text>
               </VStack>
             ) : (

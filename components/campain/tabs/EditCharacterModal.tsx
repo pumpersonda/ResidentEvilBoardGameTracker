@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   ModalBackdrop,
@@ -45,10 +45,12 @@ export const EditCharacterModal: React.FC<EditCharacterModalProps> = ({
 
   const [playerName, setPlayerName] = useState('');
   const [isAssignItemModalOpen, setIsAssignItemModalOpen] = useState(false);
+  const [lastCharacterId, setLastCharacterId] = useState(activeCharacter?.character.id);
 
-  useEffect(() => {
+  if (activeCharacter?.character.id !== lastCharacterId) {
+    setLastCharacterId(activeCharacter?.character.id);
     setPlayerName(activeCharacter?.controlledBy.realName ?? '');
-  }, [activeCharacter]);
+  }
 
   if (!activeCharacter) return null;
 
@@ -82,7 +84,11 @@ export const EditCharacterModal: React.FC<EditCharacterModalProps> = ({
             </ModalCloseButton>
           </ModalHeader>
 
-          <ModalBody className="flex-1 mt-0 mb-0" scrollEnabled showsVerticalScrollIndicator={false}>
+          <ModalBody
+            className="flex-1 mt-0 mb-0"
+            scrollEnabled
+            showsVerticalScrollIndicator={false}
+          >
             <VStack space="lg" className="pb-4">
               <VStack space="sm">
                 <Text className="text-foreground font-semibold">Player Name</Text>

@@ -34,7 +34,7 @@ export default function CurrentCampaignScreen() {
       case 'Cards':
         return <DiscardedCardsTab campaign={campaign} />;
       case 'Scenarios':
-        return <ScenariosTab campaign={campaign} />
+        return <ScenariosTab campaign={campaign} />;
       default:
         return null;
     }

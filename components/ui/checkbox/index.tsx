@@ -115,17 +115,18 @@ const CheckboxLabel = React.forwardRef<
 type ICheckboxIconProps = VariantProps<typeof checkboxIconStyle> &
   React.ComponentProps<typeof UICheckbox.Icon> & { className?: string };
 
-const CheckboxIcon = React.forwardRef<React.ComponentRef<typeof UICheckbox.Icon>, ICheckboxIconProps>(
-  function CheckboxIcon({ className, size = 'md', ...props }, ref) {
-    return (
-      <UICheckbox.Icon
-        className={checkboxIconStyle({ class: className, parentVariants: { size } })}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
+const CheckboxIcon = React.forwardRef<
+  React.ComponentRef<typeof UICheckbox.Icon>,
+  ICheckboxIconProps
+>(function CheckboxIcon({ className, size = 'md', ...props }, ref) {
+  return (
+    <UICheckbox.Icon
+      className={checkboxIconStyle({ class: className, parentVariants: { size } })}
+      ref={ref}
+      {...props}
+    />
+  );
+});
 
 Checkbox.displayName = 'Checkbox';
 CheckboxGroup.displayName = 'CheckboxGroup';

@@ -44,11 +44,9 @@ import { ENABLED_GAMES, GAME_LABELS, isGameEnabled } from '@/constants/gameVersi
 const createCampaignSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(3, 'The name should have at least 3 characters'),
-  gameVersion: z
-    .enum(['RE1', 'RE2', 'RE3'])
-    .refine(value => isGameEnabled(value as GameVersion), {
-      message: 'This game is not available yet',
-    }),
+  gameVersion: z.enum(['RE1', 'RE2', 'RE3']).refine(value => isGameEnabled(value as GameVersion), {
+    message: 'This game is not available yet',
+  }),
   difficulty: z.enum(['Easy', 'Normal', 'Hard']),
 });
 
