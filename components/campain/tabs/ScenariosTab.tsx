@@ -26,9 +26,15 @@ interface ScenariosTabProps {
 
 const EXPANSION_ORDER: GameExpansion[] = ['Core Box', 'Bleak Outpost', 'Into The Darkness'];
 
+const TOGGLEABLE_EXPANSIONS: Exclude<GameExpansion, 'Core Box'>[] = [
+  'Bleak Outpost',
+  'Into The Darkness',
+];
+
 export const ScenariosTab: React.FC<ScenariosTabProps> = ({ campaign }) => {
   const updateScenarioStatus = useCampaignStore(state => state.updateScenarioStatus);
   const unlockScenario = useCampaignStore(state => state.unlockScenario);
+  const toggleExpansion = useCampaignStore(state => state.toggleExpansion);
   const [scenarioPendingUnlock, setScenarioPendingUnlock] = useState<Scenario | null>(null);
 
   const lockStatusById = useMemo(() => {
@@ -39,13 +45,20 @@ export const ScenariosTab: React.FC<ScenariosTabProps> = ({ campaign }) => {
     return map;
   }, [campaign.game]);
 
+  const availableExpansions = TOGGLEABLE_EXPANSIONS.filter(expansion =>
+    campaign.scenarios.some(s => s.expansion === expansion)
+  );
+
   const groups = EXPANSION_ORDER.map(
     expansion =>
       [expansion, campaign.scenarios.filter(s => s.expansion === expansion)] as [
         GameExpansion,
         Scenario[],
       ]
-  ).filter(([, scenarios]) => scenarios.length > 0);
+  ).filter(
+    ([expansion, scenarios]) =>
+      scenarios.length > 0 && campaign.enabledExpansions.includes(expansion)
+  );
 
   const onToggleComplete = (scenario: Scenario) => {
     updateScenarioStatus(scenario.id, scenario.status === 'Completed' ? 'Unlocked' : 'Completed');
@@ -60,6 +73,26 @@ export const ScenariosTab: React.FC<ScenariosTabProps> = ({ campaign }) => {
   return (
     <VStack className="flex-1">
       <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
+        {availableExpansions.length > 0 && (
+          <VStack space="sm" className="pb-4 mb-2 border-b border-border">
+            {availableExpansions.map(expansion => (
+              <HStack key={expansion} space="sm" className="items-center justify-between">
+                <Text className="text-foreground font-semibold">{expansion}</Text>
+                <Checkbox
+                  value={expansion}
+                  isChecked={campaign.enabledExpansions.includes(expansion)}
+                  onChange={() => toggleExpansion(expansion)}
+                  accessibilityLabel={`Enable ${expansion}`}
+                >
+                  <CheckboxIndicator size="lg">
+                    <CheckboxIcon as={Check} />
+                  </CheckboxIndicator>
+                </Checkbox>
+              </HStack>
+            ))}
+          </VStack>
+        )}
+
         {groups.length === 0 ? (
           <VStack className="flex-1 items-center justify-center py-12">
             <Text className="text-muted-foreground">No scenarios available for this game yet.</Text>

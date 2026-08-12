@@ -7,6 +7,7 @@ import {
   Card,
   CardType,
   CharacterHealth,
+  GameExpansion,
   GameVersion,
   Item,
   Scenario,
@@ -31,6 +32,7 @@ interface CampaignStore {
   setDangerLevel: (level: number) => void;
   updateScenarioStatus: (scenarioId: string, status: ScenarioStatus) => void;
   unlockScenario: (scenarioId: string) => void;
+  toggleExpansion: (expansion: Exclude<GameExpansion, 'Core Box'>) => void;
   updateActiveCharacterHealth: (characterId: string, health: CharacterHealth) => void;
   addActiveCharacter: (activeCharacter: ActiveCharacter) => void;
   removeActiveCharacter: (characterId: string) => void;
@@ -77,6 +79,7 @@ export const useCampaignStore = create<CampaignStore>()(
             reserveCharacters: [],
             itemsBox: [], // Inventory box starts empty
             scenarios,
+            enabledExpansions: ['Core Box'],
             discardedCards: {},
             addedCards: {},
             createdAt: new Date().toISOString(),
@@ -133,6 +136,20 @@ export const useCampaignStore = create<CampaignStore>()(
               scenarios: c.scenarios.map(s =>
                 s.id === scenarioId && s.status === 'Locked' ? { ...s, status: 'Unlocked' } : s
               ),
+            };
+          }),
+        })),
+
+      toggleExpansion: expansion =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const isEnabled = c.enabledExpansions.includes(expansion);
+            return {
+              ...c,
+              enabledExpansions: isEnabled
+                ? c.enabledExpansions.filter(e => e !== expansion)
+                : [...c.enabledExpansions, expansion],
             };
           }),
         })),
@@ -398,6 +415,17 @@ export const useCampaignStore = create<CampaignStore>()(
     {
       name: 're-campaign-store',
       storage: createJSONStorage(() => AsyncStorage),
+      version: 1,
+      migrate: (persistedState) => {
+        const state = persistedState as CampaignStore;
+        return {
+          ...state,
+          allCampaigns: state.allCampaigns.map(c => ({
+            ...c,
+            enabledExpansions: c.enabledExpansions ?? ['Core Box'],
+          })),
+        };
+      },
     }
   )
 );

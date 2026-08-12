@@ -110,5 +110,6 @@ export interface Campaign {
   addedCards: Partial<Record<CardType, Card[]>>;
   discardedCards: Partial<Record<CardType, Card[]>>;
   scenarios: Scenario[];
+  enabledExpansions: GameExpansion[];
   createdAt: string;
 }
