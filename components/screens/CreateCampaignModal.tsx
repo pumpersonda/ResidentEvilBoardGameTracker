@@ -37,13 +37,18 @@ import { HStack } from '@/components/ui/hstack';
 import { X } from 'lucide-react-native';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
-import { Campaign } from '@/types';
+import { Campaign, GameVersion } from '@/types';
+import { ENABLED_GAMES, GAME_LABELS, isGameEnabled } from '@/constants/gameVersions';
 
 // Zod Schema
 const createCampaignSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(3, 'The name should have at least 3 characters'),
-  gameVersion: z.enum(['RE1', 'RE2', 'RE3']),
+  gameVersion: z
+    .enum(['RE1', 'RE2', 'RE3'])
+    .refine(value => isGameEnabled(value as GameVersion), {
+      message: 'This game is not available yet',
+    }),
   difficulty: z.enum(['Easy', 'Normal', 'Hard']),
 });
 
@@ -159,9 +164,9 @@ export default function CreateCampaignModal({
                         <SelectDragIndicatorWrapper>
                           <SelectDragIndicator />
                         </SelectDragIndicatorWrapper>
-                        <SelectItem label="Resident Evil 1" value="RE1" />
-                        <SelectItem label="Resident Evil 2" value="RE2" />
-                        <SelectItem label="Resident Evil 3" value="RE3" />
+                        {ENABLED_GAMES.map(game => (
+                          <SelectItem key={game} label={GAME_LABELS[game]} value={game} />
+                        ))}
                       </SelectContent>
                     </SelectPortal>
                   </Select>

@@ -2,6 +2,7 @@ import { Card, CardType, GameVersion } from '@/types';
 import { RE1_CARDS, RE1_SCENARIOS } from './RE1';
 import { CHARACTERS_PROFILE, CharacterProfile } from './RE1/characters';
 import { ScenarioDefinition } from './RE1/scenarios';
+import { isCardTypeAvailable } from '@/constants/gameVersions';
 
 const CARDS_BY_GAME: Record<GameVersion, Partial<Record<CardType, Card[]>>> = {
   [GameVersion.RE1]: RE1_CARDS,
@@ -32,9 +33,13 @@ export const getGameCardData = (
   cardId: string
 ): Card | undefined => CARDS_BY_GAME[game]?.[cardType]?.find(card => card.id === cardId);
 
-/** All known card definitions for a game, grouped by category. */
+/** All known card definitions for a game, grouped by category, excluding card types not available for it. */
 export const getGameCards = (game: GameVersion): Partial<Record<CardType, Card[]>> =>
-  CARDS_BY_GAME[game];
+  Object.fromEntries(
+    Object.entries(CARDS_BY_GAME[game]).filter(([cardType]) =>
+      isCardTypeAvailable(cardType as CardType, game)
+    )
+  ) as Partial<Record<CardType, Card[]>>;
 
 /** All scenario definitions for a game. */
 export const getGameScenarios = (game: GameVersion): ScenarioDefinition[] =>
