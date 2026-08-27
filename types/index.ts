@@ -13,7 +13,8 @@ export enum GameVersion {
   RE3 = 'RE3',
 }
 
-export type GameExpansion = 'Core Box' | 'Bleak Outpost' | 'Into The Darkness';
+export type GameExpansion =
+  'Core Box' | 'Bleak Outpost' | 'Into The Darkness' | "Director's Cut";
 
 // Shared traffic-light color scale used by Tension cards and the Danger Level dial
 export type ThreatColor = 'Green' | 'Amber' | 'Red';

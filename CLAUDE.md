@@ -13,6 +13,8 @@ Core purpose:
 - Mansion map exploration progress
 - All data saved locally on device (100% offline)
 
+* NEVER execute terminal commands, run tests, or start the project (e.g., `npm start`, `npm test`) unless explicitly requested by the user. Your role is strictly limited to generating code, creating components, analyzing, and refactoring.
+
 ## Mandatory Rules (NEVER BREAK THESE)
 
 - Keep answers **short and concise** (only expand if user explicitly asks for step-by-step)
