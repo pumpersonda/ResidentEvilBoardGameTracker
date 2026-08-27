@@ -15,6 +15,7 @@ const makeCharacter = (id: string, name: string): CharacterProfile => ({
   quantity: 1,
   isAdvanced: false,
   isReserved: false,
+  expansion: 'Core Box',
   avatar: { uri: `avatar-${id}` },
 });
 

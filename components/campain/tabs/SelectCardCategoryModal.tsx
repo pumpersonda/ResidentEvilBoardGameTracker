@@ -20,6 +20,7 @@ interface SelectCardCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   game: GameVersion;
+  mode: 'added' | 'discarded';
   onSelectCategory: (cardType: CardType) => void;
 }
 
@@ -27,6 +28,7 @@ export const SelectCardCategoryModal: React.FC<SelectCardCategoryModalProps> = (
   isOpen,
   onClose,
   game,
+  mode,
   onSelectCategory,
 }) => {
   const resolvedTheme = useResolvedTheme();
@@ -34,7 +36,7 @@ export const SelectCardCategoryModal: React.FC<SelectCardCategoryModalProps> = (
   const categories = useMemo(
     () =>
       (Object.entries(getGameCards(game)) as [CardType, CardModel[]][])
-        .filter(([, cards]) => cards.length > 0)
+        .filter(([cardType, cards]) => cardType !== 'Item' && cards.length > 0)
         .map(([cardType]) => cardType),
     [game]
   );
@@ -44,7 +46,9 @@ export const SelectCardCategoryModal: React.FC<SelectCardCategoryModalProps> = (
       <ModalBackdrop />
       <ModalContent className="bg-card">
         <ModalHeader className="pb-3">
-          <Text className="text-foreground text-xl font-semibold">Discard a Card</Text>
+          <Text className="text-foreground text-xl font-semibold">
+            {mode === 'added' ? 'Add a Card' : 'Discard a Card'}
+          </Text>
           <ModalCloseButton>
             <X color={THEME_COLORS[resolvedTheme].mutedForeground} size={20} />
           </ModalCloseButton>

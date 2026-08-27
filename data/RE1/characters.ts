@@ -21,6 +21,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: true,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/albert-wesker.png'),
   },
   {
@@ -31,6 +32,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: false,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/barry-burton.png'),
   },
   {
@@ -41,6 +43,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: true,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/brad-vickers.png'),
   },
   {
@@ -51,6 +54,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: false,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/chris-redfield.png'),
   },
   {
@@ -61,6 +65,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: false,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/edward-dewey.png'),
   },
   {
@@ -71,6 +76,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: true,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/enrico-marini.png'),
   },
   {
@@ -81,6 +87,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: false,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/forest-speyer.png'),
   },
   {
@@ -91,6 +98,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: false,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/jill-valentine.png'),
   },
   {
@@ -101,6 +109,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: false,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/joseph-frost.png'),
   },
   {
@@ -111,6 +120,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: false,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/kenneth-j-sullivan.png'),
   },
   {
@@ -121,6 +131,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: false,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/rebecca-chambers.png'),
   },
   {
@@ -131,6 +142,7 @@ export const CHARACTERS_PROFILE: CharacterProfile[] = [
     isReserved: true,
     game: GameVersion.RE1,
     quantity: 1,
+    expansion: 'Core Box',
     avatar: require('@/assets/character_avatars/richard-aiken.png'),
   },
 ];

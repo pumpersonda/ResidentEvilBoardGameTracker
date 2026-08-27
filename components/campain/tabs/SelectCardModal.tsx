@@ -20,20 +20,22 @@ import { isTensionCard, TENSION_ACCENT_CLASSES } from './tensionCardDisplay';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
 
-interface DiscardCardModalProps {
+interface SelectCardModalProps {
   isOpen: boolean;
   onClose: () => void;
   game: GameVersion;
   cardType: CardType;
-  onDiscard: (cardType: CardType, card: CardModel) => void;
+  mode: 'added' | 'discarded';
+  onSelect: (cardType: CardType, card: CardModel) => void;
 }
 
-export const DiscardCardModal: React.FC<DiscardCardModalProps> = ({
+export const SelectCardModal: React.FC<SelectCardModalProps> = ({
   isOpen,
   onClose,
   game,
   cardType,
-  onDiscard,
+  mode,
+  onSelect,
 }) => {
   const resolvedTheme = useResolvedTheme();
   const [query, setQuery] = useState('');
@@ -51,12 +53,16 @@ export const DiscardCardModal: React.FC<DiscardCardModalProps> = ({
     onClose();
   };
 
+  const actionLabel = mode === 'added' ? 'Add' : 'Discard';
+
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="md">
       <ModalBackdrop />
       <ModalContent className="bg-card h-[85%] flex-col">
         <ModalHeader className="pb-3">
-          <Text className="text-foreground text-xl font-semibold">Discard a {cardType} Card</Text>
+          <Text className="text-foreground text-xl font-semibold">
+            {actionLabel} a {cardType} Card
+          </Text>
           <ModalCloseButton>
             <X color={THEME_COLORS[resolvedTheme].mutedForeground} size={20} />
           </ModalCloseButton>
@@ -102,7 +108,7 @@ export const DiscardCardModal: React.FC<DiscardCardModalProps> = ({
                   return (
                     <Pressable
                       key={card.id}
-                      onPress={() => onDiscard(cardType, { ...card, quantity: 1 })}
+                      onPress={() => onSelect(cardType, { ...card, quantity: 1 })}
                       className={`flex-row items-center justify-between gap-3 border-l-4 ${accentClass} px-3 py-3 active:bg-muted/40 ${
                         isLast ? '' : 'border-b border-b-border'
                       }`}

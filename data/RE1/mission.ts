@@ -1,302 +1,261 @@
 import { Card, GameVersion } from '@/types';
 
-// ==================== INTERFACE ====================
-export interface MissionCard extends Card {
-  quote: string;
-}
-
 // ==================== DATA ====================
-export const MISSION_CARDS: MissionCard[] = [
-  // --- ROW 1 ---
-  {
-    id: 'mission-01',
-    name: 'Cure For Poison',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote: 'Someone out there must have survived, and they need your help.',
-  },
-  {
-    id: 'mission-02',
-    name: 'Disinfect The Room',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote:
-      "A harsh chemical smell burns the back of your throat. If you don't clear this out, it will be dangerous...",
-  },
-  {
-    id: 'mission-03',
-    name: 'Disinfect The Room',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote:
-      "A harsh chemical smell burns the back of your throat. If you don't clear this out, it will be dangerous...",
-  },
-  {
-    id: 'mission-04',
-    name: 'Resting Place',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote: 'So this is what happened to the staff... someone has brought them down here to rest.',
-  },
+export const MISSION_CARDS: Card[] = [
 
-  // --- ROW 2 ---
+  // ==================== CORE BOX ====================
   {
-    id: 'mission-05',
-    name: 'Dangerous Puzzle',
+    id: '1',
+    name: "…You're Alive?!",
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      'A complex mechanism bars the way, guarding a valuable asset... but making a mistake will have deadly consequences.',
+    expansion: 'Core Box',
   },
   {
-    id: 'mission-06',
-    name: 'Dangerous Puzzle',
+    id: '2',
+    name: 'Burning Bodies',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      'A complex mechanism bars the way, guarding a valuable asset... but making a mistake will have deadly consequences.',
+    expansion: 'Core Box',
   },
   {
-    id: 'mission-07',
-    name: 'Trapped',
+    id: '3',
+    name: 'Decoy',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote: "Help me! I'm trapped!",
+    expansion: 'Core Box',
   },
   {
-    id: 'mission-08',
-    name: 'Weapon Cache',
+    id: '4',
+    name: 'Defeat The Fountain Plant',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      "You've stumbled across a stash of weaponry left by a doomed guard... or perhaps one of the other S.T.A.R.S. members.",
+    expansion: 'Core Box',
+    specialId: 2,
   },
-
-  // --- ROW 3 ---
   {
-    id: 'mission-09',
-    name: 'Clear The Corridor',
+    id: '5',
+    name: 'Emergency',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      'A veritable horde of fiends stand in your way. You have no choice but to clear them out.',
+    expansion: 'Core Box',
   },
   {
-    id: 'mission-10',
-    name: 'Disarm Trap',
+    id: '6',
+    name: 'Finding Someplace Safe',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      'You freeze as a barely perceptible sound catches your attention, and look down. A wire stretches taut across the corridor.',
+    expansion: 'Core Box',
   },
   {
-    id: 'mission-11',
-    name: 'Disarm Trap',
+    id: '7',
+    name: 'Forced Retreat',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      'You freeze as a barely perceptible sound catches your attention, and look down. A wire stretches taut across the corridor.',
+    expansion: 'Core Box',
   },
   {
-    id: 'mission-12',
-    name: 'Secure The Area',
+    id: '8',
+    name: 'Get The Serum!',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      "It's vital to have a route back to the main hall, but unfortunately, several corpses lay strewn on the ground ahead of you.",
+    expansion: 'Core Box',
+    specialId: 5,
   },
-
-  // --- ROW 4 ---
   {
-    id: 'mission-13',
+    id: '9',
+    name: 'Gunshot',
+    type: 'Mission',
+    game: GameVersion.RE1,
+    quantity: 1,
+    expansion: 'Core Box',
+  },
+  {
+    id: '10',
+    name: 'Mission Of Mercy',
+    type: 'Mission',
+    game: GameVersion.RE1,
+    quantity: 1,
+    expansion: 'Core Box',
+  },
+  {
+    id: '11',
+    name: 'Radio Call',
+    type: 'Mission',
+    game: GameVersion.RE1,
+    quantity: 1,
+    expansion: 'Core Box',
+  },
+  {
+    id: '12',
+    name: 'Rescue',
+    type: 'Mission',
+    game: GameVersion.RE1,
+    quantity: 1,
+    expansion: 'Core Box',
+    specialId: 3,
+  },
+  {
+    id: '13',
+    name: 'Scouting Ahead',
+    type: 'Mission',
+    game: GameVersion.RE1,
+    quantity: 1,
+    expansion: 'Core Box',
+  },
+  {
+    id: '14',
+    name: 'Screams',
+    type: 'Mission',
+    game: GameVersion.RE1,
+    quantity: 1,
+    expansion: 'Core Box',
+  },
+  {
+    id: '15',
+    name: 'Searching For MO Disks',
+    type: 'Mission',
+    game: GameVersion.RE1,
+    quantity: 1,
+    expansion: 'Core Box',
+    specialId: 1,
+  },
+  {
+    id: '16',
+    name: 'Searching For Survivors',
+    type: 'Mission',
+    game: GameVersion.RE1,
+    quantity: 1,
+    expansion: 'Core Box',
+  },
+  {
+    id: '17',
+    name: 'Securing An Escape Route',
+    type: 'Mission',
+    game: GameVersion.RE1,
+    quantity: 1,
+    expansion: 'Core Box',
+  },
+  {
+    id: '18',
     name: 'Supply Run',
     type: 'Mission',
     game: GameVersion.RE1,
-    quantity: 1,
-    quote:
-      'It would be an unnecessary risk heading down there... but you could really use the supplies.',
+    quantity: 2,
+    expansion: 'Core Box',
   },
   {
-    id: 'mission-14',
-    name: 'Supply Run',
+    id: '19',
+    name: 'Take Point',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      'It would be an unnecessary risk heading down there... but you could really use the supplies.',
+    expansion: 'Core Box',
   },
   {
-    id: 'mission-15',
-    name: 'Supply Run',
+    id: '20',
+    name: 'The Graveyard Puzzle',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      'It would be an unnecessary risk heading down there... but you could really use the supplies.',
+    expansion: 'Core Box',
+    specialId: 4,
   },
   {
-    id: 'mission-16',
-    name: "Researcher's Will",
+    id: '21',
+    name: 'Under Attack!',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote: 'Someone has painstakingly hidden their last testament from prying eyes.',
+    expansion: 'Core Box',
   },
 
-  // --- ROW 5 ---
+  // ==================== BLEAK OUTPOST ====================
   {
-    id: 'mission-17',
-    name: 'Scouting Run',
+    id: '22',
+    name: 'Blue Gem Into The Tiger Statue',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote: "It's quiet. Too quiet. Best to scout out the area ahead before advancing.",
+    expansion: 'Bleak Outpost',
+    specialId: 7,
   },
   {
-    id: 'mission-18',
-    name: 'Scouting Run',
+    id: '23',
+    name: 'Problem Solving',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote: "It's quiet. Too quiet. Best to scout out the area ahead before advancing.",
+    expansion: 'Bleak Outpost',
   },
   {
-    id: 'mission-19',
-    name: 'Clear The Corridor',
+    id: '24',
+    name: 'Securing An Escape Route',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      'A veritable horde of fiends stand in your way. You have no choice but to clear them out.',
+    expansion: 'Bleak Outpost',
   },
   {
-    id: 'mission-20',
-    name: 'Barricade The Windows',
+    id: '25',
+    name: 'Teamwork',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      "You're constantly checking over your shoulder, on edge from the sound of shattering glass.",
-  },
-
-  // --- ROW 6 ---
-  {
-    id: 'mission-21',
-    name: 'Barricade The Windows',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote:
-      "You're constantly checking over your shoulder, on edge from the sound of shattering glass.",
+    expansion: 'Bleak Outpost',
   },
   {
-    id: 'mission-22',
-    name: 'Barricade The Windows',
+    id: '26',
+    name: 'Yellow Gem Into The Tiger Statue',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      "You're constantly checking over your shoulder, on edge from the sound of shattering glass.",
-  },
-  {
-    id: 'mission-23',
-    name: 'Defend The Area',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote:
-      "The enemies here must be destroyed. But whatever you do, don't let them overrun your position!",
-  },
-  {
-    id: 'mission-24',
-    name: 'Dependable To The End',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote: '', // Esta es la carta de Richard Aiken, no tiene texto en cursiva/quote en la imagen.
+    expansion: 'Bleak Outpost',
+    specialId: 6,
   },
 
-  // --- ROW 7 ---
+  // ==================== DIRECTOR'S CUT ====================
   {
-    id: 'mission-25',
-    name: 'Medical Delivery',
+    id: '27',
+    name: 'Above And Beyond',
     type: 'Mission',
     game: GameVersion.RE1,
-    quantity: 1,
-    quote: "We're going to need more of these...",
+    quantity: 2,
+    expansion: "Director's Cut",
   },
   {
-    id: 'mission-26',
-    name: 'Medical Delivery',
+    id: '28',
+    name: 'Proving Their Innocence',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote: "We're going to need more of these...",
+    expansion: "Director's Cut",
+    specialId: 9,
   },
   {
-    id: 'mission-27',
-    name: 'In Need Of Assistance',
+    id: '29',
+    name: 'Rooting Out The Traitor',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      "They're badly hurt... and you're not sure how much longer they'll be able to last without help.",
+    expansion: "Director's Cut",
+    specialId: 8,
   },
   {
-    id: 'mission-28',
-    name: 'Rescue Mission',
+    id: '30',
+    name: 'Travel To Item Box',
     type: 'Mission',
     game: GameVersion.RE1,
     quantity: 1,
-    quote:
-      "This place is dangerous. It's time to gather the other survivors, and make sure everyone is safe.",
-  },
-
-  // --- ROW 8 ---
-  {
-    id: 'mission-29',
-    name: 'Search For Survivors',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote:
-      "With no radio contact, the only way you'll know if the others are okay is to look for them.",
-  },
-  {
-    id: 'mission-30',
-    name: 'Burn The Bodies',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote: "They're dead now, but how long before they get up again?",
-  },
-  {
-    id: 'mission-31',
-    name: 'Secure The Area',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote:
-      "It's vital to have a route back to the main hall, but unfortunately, several corpses lay strewn on the ground ahead of you.",
-  },
-  {
-    id: 'mission-32',
-    name: 'Resting Place',
-    type: 'Mission',
-    game: GameVersion.RE1,
-    quantity: 1,
-    quote: 'So this is what happened to the staff... someone has brought them down here to rest.',
+    expansion: "Director's Cut",
+    specialId: 10,
   },
 ];
