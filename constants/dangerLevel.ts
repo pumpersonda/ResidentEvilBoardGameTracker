@@ -1,4 +1,5 @@
-import { GameVersion, ThreatColor } from '@/types';
+import { GameVersion, ThemeName, ThreatColor } from '@/types';
+import { THEME_COLORS } from '@/constants/theme';
 
 interface DangerLevelBand {
   color: ThreatColor;
@@ -43,8 +44,15 @@ export const DANGER_LEVEL_BADGE_CLASSES: Record<ThreatColor, string> = {
   Red: 'text-destructive border-destructive',
 };
 
-export const DANGER_LEVEL_TRACK_CLASSES: Record<ThreatColor, string> = {
-  Green: 'bg-success',
-  Amber: 'bg-warning',
-  Red: 'bg-destructive',
+// Literal color (not a Tailwind class) for react-native-svg props, which can't consume classNames.
+export const getDangerRingColor = (color: ThreatColor, theme: ThemeName): string => {
+  const colors = THEME_COLORS[theme];
+  switch (color) {
+    case 'Green':
+      return colors.success;
+    case 'Amber':
+      return colors.warning;
+    case 'Red':
+      return colors.destructive;
+  }
 };

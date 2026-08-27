@@ -17,6 +17,7 @@ import {
 import { CharacterProfile } from '@/data/RE1/characters';
 import { CreateCampaignForm } from '@/components/screens/CreateCampaignModal';
 import { getGameScenarios } from '@/data';
+import { DANGER_LEVEL_CONFIG } from '@/constants/dangerLevel';
 
 interface CampaignStore {
   currentCampaignId: string | null;
@@ -113,9 +114,11 @@ export const useCampaignStore = create<CampaignStore>()(
 
       setDangerLevel: level =>
         set(state => ({
-          allCampaigns: state.allCampaigns.map(c =>
-            c.id === state.currentCampaignId ? { ...c, dangerLevel: level } : c
-          ),
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const maxLevel = DANGER_LEVEL_CONFIG[c.game]?.maxLevel ?? level;
+            return { ...c, dangerLevel: Math.max(0, Math.min(level, maxLevel)) };
+          }),
         })),
 
       updateScenarioStatus: (scenarioId, status) =>
