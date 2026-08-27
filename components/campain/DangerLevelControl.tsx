@@ -32,7 +32,7 @@ export const DangerLevelControl: React.FC<DangerLevelControlProps> = ({ campaign
         onPress={() => setIsOpen(true)}
         accessibilityRole="button"
         accessibilityLabel={`Danger level ${campaign.dangerLevel} of ${config.maxLevel}. Tap to adjust.`}
-        className="self-center pt-2 active:opacity-80"
+        className="pt-2 active:opacity-80"
       >
         <DangerRing
           value={campaign.dangerLevel}
