@@ -24,7 +24,7 @@ export default function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProp
         <AlertDialogHeader>
           <Text className="text-foreground text-xl font-semibold">Legal disclaimer</Text>
         </AlertDialogHeader>
-        <AlertDialogBody>
+        <AlertDialogBody className="p-3s">
           <VStack space="sm">
             <Text className="text-muted-foreground">
               This is an unofficial, fan-made companion app created to track personal campaign
@@ -43,7 +43,7 @@ export default function DisclaimerModal({ isOpen, onClose }: DisclaimerModalProp
           </VStack>
         </AlertDialogBody>
         <AlertDialogFooter>
-          <Button className="flex-1 bg-destructive active:opacity-90" onPress={onClose}>
+          <Button className="flex-1 bg-destructive active:opacity-90 mt-2" onPress={onClose}>
             <ButtonText>Got it</ButtonText>
           </Button>
         </AlertDialogFooter>

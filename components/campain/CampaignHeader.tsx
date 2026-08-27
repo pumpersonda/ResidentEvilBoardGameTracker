@@ -16,13 +16,13 @@ export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ campaign }) => {
 
   return (
     <VStack className="px-4 pt-6 pb-4 bg-card border-b border-border">
-      <VStack className="flex-row justify-between">
+      <HStack className="justify-between">
         <VStack>
           <Text className="text-foreground text-2xl font-bold">{campaign.name}</Text>
           <Text className="text-muted-foreground">{campaign.game}</Text>
         </VStack>
         <DangerLevelControl campaign={campaign} />
-      </VStack>
+      </HStack>
 
       <VStack space="xs" className="mt-2">
         <HStack className="items-center justify-between">
