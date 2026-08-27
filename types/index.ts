@@ -88,6 +88,7 @@ export interface Card {
   specialId?: number;
   game: GameVersion;
   quantity: number | 1;
+  expansion: GameExpansion;
 }
 
 export type ScenarioStatus = 'Locked' | 'Unlocked' | 'Completed';

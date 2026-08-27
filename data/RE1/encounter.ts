@@ -13,7 +13,6 @@ export enum EncounterSymbol {
 // ==================== INTERFACE ====================
 export interface EncounterCard extends Card {
   symbol: EncounterSymbol[];
-  expansion: GameExpansion;
 }
 
 // ==================== DATA ====================
