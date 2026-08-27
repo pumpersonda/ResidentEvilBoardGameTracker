@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Image, ScrollView } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
 import { Card } from '@/components/ui/card';
 import { Pressable } from '@/components/ui/pressable';
-import { ActiveCharacter, Campaign, HEALTH_LABELS } from '@/types';
+import { ActiveCharacter, Campaign, getHealthColor, HEALTH_LABELS, KEROSENE_COLOR } from '@/types';
 import { useCampaignStore } from '@/store/campaignStore';
-import { Pencil, Plus, Trash2 } from 'lucide-react-native';
+import { Droplet, Pencil, Plus, Trash2 } from 'lucide-react-native';
 import { SelectCharacterModal } from './SelectCharacterModal';
 import { EditCharacterModal } from './EditCharacterModal';
 import { CharacterDetailsModal } from './CharacterDetailsModal';
@@ -76,9 +76,23 @@ export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
                               {activeCharacter.controlledBy.realName ||
                                 activeCharacter.character.name}
                             </Text>
-                            <Text className="text-muted-foreground text-xs">
-                              {HEALTH_LABELS[activeCharacter.health.value]}
-                            </Text>
+                            <HStack space="xs" className="items-center">
+                              <View
+                                className="w-2.5 h-2.5 rounded-full"
+                                style={{ backgroundColor: getHealthColor(activeCharacter.health) }}
+                              />
+                              <Text className="text-muted-foreground text-xs">
+                                {HEALTH_LABELS[activeCharacter.health.value]}
+                              </Text>
+                              {activeCharacter.kerosene !== undefined && (
+                                <HStack space="xs" className="items-center ml-2">
+                                  <Droplet color={KEROSENE_COLOR} size={12} />
+                                  <Text className="text-muted-foreground text-xs">
+                                    {activeCharacter.kerosene}
+                                  </Text>
+                                </HStack>
+                              )}
+                            </HStack>
                             <Text className="text-muted-foreground text-xs">
                               {itemCount === 0 ? 'No items' : `${itemCount} items carried`}
                             </Text>

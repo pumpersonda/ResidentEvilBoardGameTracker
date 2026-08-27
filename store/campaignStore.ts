@@ -10,6 +10,7 @@ import {
   GameExpansion,
   GameVersion,
   Item,
+  KEROSENE_MAX,
   Scenario,
   ScenarioStatus,
 } from '@/types';
@@ -34,6 +35,7 @@ interface CampaignStore {
   unlockScenario: (scenarioId: string) => void;
   toggleExpansion: (expansion: Exclude<GameExpansion, 'Core Box'>) => void;
   updateActiveCharacterHealth: (characterId: string, health: CharacterHealth) => void;
+  updateActiveCharacterKerosene: (characterId: string, kerosene: number) => void;
   addActiveCharacter: (activeCharacter: ActiveCharacter) => void;
   removeActiveCharacter: (characterId: string) => void;
   moveCharacterToReserve: (characterId: string) => void;
@@ -162,6 +164,21 @@ export const useCampaignStore = create<CampaignStore>()(
               ...c,
               activeCharacters: c.activeCharacters.map(ac =>
                 ac.character.id === characterId ? { ...ac, health: newHealth } : ac
+              ),
+            };
+          }),
+        })),
+
+      updateActiveCharacterKerosene: (characterId, kerosene) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.map(ac =>
+                ac.character.id === characterId
+                  ? { ...ac, kerosene: Math.min(KEROSENE_MAX, Math.max(0, kerosene)) }
+                  : ac
               ),
             };
           }),

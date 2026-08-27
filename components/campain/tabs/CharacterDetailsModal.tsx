@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, View } from 'react-native';
 import {
   Modal,
   ModalBackdrop,
@@ -13,8 +13,16 @@ import { Button, ButtonText } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
-import { X } from 'lucide-react-native';
-import { ActiveCharacter, Campaign, GameVersion, HEALTH_LABELS } from '@/types';
+import { Droplet, X } from 'lucide-react-native';
+import {
+  ActiveCharacter,
+  Campaign,
+  GameVersion,
+  getHealthColor,
+  HEALTH_LABELS,
+  KEROSENE_COLOR,
+  KEROSENE_MAX,
+} from '@/types';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
 
@@ -68,10 +76,16 @@ export const CharacterDetailsModal: React.FC<CharacterDetailsModalProps> = ({
                     </Text>
                   )}
                 </HStack>
-                <Text className="text-muted-foreground text-sm">
-                  {HEALTH_LABELS[activeCharacter.health.value]}
-                  {activeCharacter.health.isPoisoned ? ' · Poisoned' : ''}
-                </Text>
+                <HStack space="xs" className="items-center">
+                  <View
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{ backgroundColor: getHealthColor(activeCharacter.health) }}
+                  />
+                  <Text className="text-muted-foreground text-sm">
+                    {HEALTH_LABELS[activeCharacter.health.value]}
+                    {activeCharacter.health.isPoisoned ? ' · Poisoned' : ''}
+                  </Text>
+                </HStack>
               </VStack>
             </HStack>
 
@@ -85,7 +99,12 @@ export const CharacterDetailsModal: React.FC<CharacterDetailsModalProps> = ({
             {showKerosene && (
               <VStack space="sm">
                 <Text className="text-foreground font-semibold">Kerosene</Text>
-                <Text className="text-muted-foreground">{activeCharacter.kerosene}</Text>
+                <HStack space="xs" className="items-center">
+                  <Droplet color={KEROSENE_COLOR} size={16} />
+                  <Text className="text-muted-foreground">
+                    {activeCharacter.kerosene}/{KEROSENE_MAX}
+                  </Text>
+                </HStack>
               </VStack>
             )}
 
