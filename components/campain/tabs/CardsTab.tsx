@@ -15,6 +15,16 @@ import { SelectCardCategoryModal } from './SelectCardCategoryModal';
 import { CardsInfoModal } from './CardsInfoModal';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
+import {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from '@/components/ui/alert-dialog';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Toast, ToastDescription, ToastTitle, useToast } from '@/components/ui/toast';
 
 interface CardsTabProps {
   campaign: Campaign;
@@ -28,14 +38,19 @@ export const CardsTab: React.FC<CardsTabProps> = ({ campaign }) => {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<CardType | null>(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [cardPendingRemoval, setCardPendingRemoval] = useState<{
+    cardType: CardType;
+    id: string;
+    name: string;
+  } | null>(null);
 
   const addedCard = useCampaignStore(state => state.addedCard);
   const removeFromAddedCards = useCampaignStore(state => state.removeFromAddedCards);
   const discardCard = useCampaignStore(state => state.discardCard);
   const removeFromDiscardedCard = useCampaignStore(state => state.removeFromDiscardedCard);
+  const toast = useToast();
 
   const cardsByCategory = mode === 'added' ? campaign.addedCards : campaign.discardedCards;
-  const onSelect = mode === 'added' ? addedCard : discardCard;
   const onRemove = mode === 'added' ? removeFromAddedCards : removeFromDiscardedCard;
   const emptyMessage = mode === 'added' ? 'No cards added yet.' : 'No cards discarded yet.';
 
@@ -43,8 +58,52 @@ export const CardsTab: React.FC<CardsTabProps> = ({ campaign }) => {
   const nonEmptyCategories = categories.filter(
     ([cardType, cards]) => cardType !== 'Item' && cards.length > 0
   );
-  const onDelete = (cardType: CardType, cardId: string) => {
-    onRemove(cardType, cardId, 1);
+
+  const handleSelectCard = (cardType: CardType, card: CardModel) => {
+    if (mode === 'added') {
+      addedCard(cardType, card);
+    } else {
+      discardCard(cardType, card);
+    }
+    toast.show({
+      placement: 'top',
+      render: ({ id }) => (
+        <Toast nativeID={`toast-${id}`} action="success" variant="solid">
+          <ToastTitle className="font-semibold text-success">
+            {mode === 'added' ? 'Card added' : 'Card discarded'}
+          </ToastTitle>
+          <ToastDescription size="sm">
+            {mode === 'added'
+              ? `"${card.name}" was added.`
+              : `"${card.name}" was discarded.`}
+          </ToastDescription>
+        </Toast>
+      ),
+    });
+  };
+
+  const handleRequestDeleteCard = (cardType: CardType, cardId: string, cardName: string) => {
+    setCardPendingRemoval({ cardType, id: cardId, name: cardName });
+  };
+
+  const handleConfirmDeleteCard = () => {
+    if (!cardPendingRemoval) return;
+    const { cardType, id, name } = cardPendingRemoval;
+    onRemove(cardType, id, 1);
+    setCardPendingRemoval(null);
+    toast.show({
+      placement: 'top',
+      render: ({ id: toastId }) => (
+        <Toast nativeID={`toast-${toastId}`} action="muted" variant="solid">
+          <ToastTitle className="font-semibold text-success">Card removed</ToastTitle>
+          <ToastDescription size="sm">
+            {mode === 'added'
+              ? `"${name}" has been removed from added cards.`
+              : `"${name}" has been removed from discarded cards.`}
+          </ToastDescription>
+        </Toast>
+      ),
+    });
   };
 
   return (
@@ -108,7 +167,9 @@ export const CardsTab: React.FC<CardsTabProps> = ({ campaign }) => {
                           x{card.quantity}
                         </Text>
                         <Pressable
-                          onPress={() => onDelete(cardType, card.id)}
+                          onPress={() =>
+                            handleRequestDeleteCard(cardType, card.id, resolved.name)
+                          }
                           className="px-3 rounded-full active:bg-destructive/10"
                           accessibilityLabel="Eliminar carta"
                         >
@@ -155,11 +216,45 @@ export const CardsTab: React.FC<CardsTabProps> = ({ campaign }) => {
           game={campaign.game}
           cardType={selectedCategory}
           mode={mode}
-          onSelect={onSelect}
+          onSelect={handleSelectCard}
         />
       )}
 
       <CardsInfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
+
+      <AlertDialog
+        isOpen={cardPendingRemoval !== null}
+        onClose={() => setCardPendingRemoval(null)}
+      >
+        <AlertDialogBackdrop />
+        <AlertDialogContent className="bg-card">
+          <AlertDialogHeader>
+            <Text className="text-foreground text-xl font-semibold">Remove card</Text>
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            <Text className="text-muted-foreground">
+              {`Remove "${cardPendingRemoval?.name}" from ${
+                mode === 'added' ? 'added' : 'discarded'
+              } cards? This cannot be undone.`}
+            </Text>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button
+              variant="outline"
+              className="flex-1 border-border"
+              onPress={() => setCardPendingRemoval(null)}
+            >
+              <ButtonText className="text-muted-foreground">Cancel</ButtonText>
+            </Button>
+            <Button
+              className="flex-1 bg-destructive active:opacity-90"
+              onPress={handleConfirmDeleteCard}
+            >
+              <ButtonText>Remove</ButtonText>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </VStack>
   );
 };

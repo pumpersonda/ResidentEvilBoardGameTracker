@@ -56,7 +56,7 @@ export function getHealthColor(health: CharacterHealth): string {
 }
 
 export const KEROSENE_MAX = 10;
-export const KEROSENE_COLOR = '#ffffff';
+export const KEROSENE_COLOR = 'gray';
 
 // ==================== ENUMS ====================
 export enum ItemType {

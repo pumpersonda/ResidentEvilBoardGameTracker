@@ -9,6 +9,16 @@ import { Campaign, Item, ItemCategory, ItemType } from '@/types';
 import { useCampaignStore } from '@/store/campaignStore';
 import { Minus, Plus, Trash2 } from 'lucide-react-native';
 import { AddItemModal } from './AddItemModal';
+import { Toast, ToastDescription, ToastTitle, useToast } from '@/components/ui/toast';
+import {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from '@/components/ui/alert-dialog';
+import { Button, ButtonText } from '@/components/ui/button';
 
 interface ItemBoxTabProps {
   campaign: Campaign;
@@ -54,9 +64,27 @@ function buildItemBoxEntries(campaign: Campaign): ItemBoxEntry[] {
 
 export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [itemPendingRemoval, setItemPendingRemoval] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const addItemToBox = useCampaignStore(state => state.addItemToBox);
   const removeFromItemsBox = useCampaignStore(state => state.removeFromItemsBox);
   const updateItemAmmunition = useCampaignStore(state => state.updateItemAmmunition);
+  const toast = useToast();
+
+  const handleAddItem = (item: Item) => {
+    addItemToBox(item);
+    toast.show({
+      placement: 'top',
+      render: ({ id }) => (
+        <Toast nativeID={`toast-${id}`} action="success" variant="solid">
+          <ToastTitle className="font-semibold text-success">Item added</ToastTitle>
+          <ToastDescription size="sm">{`"${item.name}" was added to the item box.`}</ToastDescription>
+        </Toast>
+      ),
+    });
+  };
 
   const itemBoxEntries = useMemo(() => buildItemBoxEntries(campaign), [campaign]);
 
@@ -69,8 +97,24 @@ export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
   );
   const nonEmptyCategories = categories.filter(([, entries]) => entries.length > 0);
 
-  const onDelete = (itemId: string) => {
-    removeFromItemsBox(itemId, 1);
+  const handleRequestDelete = (itemId: string, itemName: string) => {
+    setItemPendingRemoval({ id: itemId, name: itemName });
+  };
+
+  const handleConfirmDelete = () => {
+    if (!itemPendingRemoval) return;
+    const { id, name } = itemPendingRemoval;
+    removeFromItemsBox(id, 1);
+    setItemPendingRemoval(null);
+    toast.show({
+      placement: 'top',
+      render: ({ id: toastId }) => (
+        <Toast nativeID={`toast-${toastId}`} action="muted" variant="solid">
+          <ToastTitle className="font-semibold text-success">Item removed</ToastTitle>
+          <ToastDescription size="sm">{`"${name}" has been removed from the item box.`}</ToastDescription>
+        </Toast>
+      ),
+    });
   };
 
   return (
@@ -120,7 +164,7 @@ export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
                           x{boxQuantity}
                         </Text>
                         <Pressable
-                          onPress={() => onDelete(item.id)}
+                          onPress={() => handleRequestDelete(item.id, item.name)}
                           disabled={boxQuantity === 0}
                           className={`px-3 rounded-full active:bg-destructive/10 ${
                             boxQuantity === 0 ? 'opacity-30' : ''
@@ -179,8 +223,40 @@ export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         game={campaign.game}
-        onAddItem={addItemToBox}
+        onAddItem={handleAddItem}
       />
+
+      <AlertDialog
+        isOpen={itemPendingRemoval !== null}
+        onClose={() => setItemPendingRemoval(null)}
+      >
+        <AlertDialogBackdrop />
+        <AlertDialogContent className="bg-card">
+          <AlertDialogHeader>
+            <Text className="text-foreground text-xl font-semibold">Remove item</Text>
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            <Text className="text-muted-foreground">
+              {`Remove "${itemPendingRemoval?.name}" from the item box? This cannot be undone.`}
+            </Text>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button
+              variant="outline"
+              className="flex-1 border-border"
+              onPress={() => setItemPendingRemoval(null)}
+            >
+              <ButtonText className="text-muted-foreground">Cancel</ButtonText>
+            </Button>
+            <Button
+              className="flex-1 bg-destructive active:opacity-90"
+              onPress={handleConfirmDelete}
+            >
+              <ButtonText>Remove</ButtonText>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </VStack>
   );
 };

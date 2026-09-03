@@ -202,9 +202,24 @@ export const useCampaignStore = create<CampaignStore>()(
         set(state => ({
           allCampaigns: state.allCampaigns.map(c => {
             if (c.id !== state.currentCampaignId) return c;
+            const characterToRemove = c.activeCharacters.find(
+              ac => ac.character.id === characterId
+            );
+            if (!characterToRemove) return c;
+
+            const newItemsBox = characterToRemove.inventory.reduce((box, item) => {
+              const existingItem = box.find(i => i.id === item.id);
+              return existingItem
+                ? box.map(i =>
+                    i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+                  )
+                : [...box, item];
+            }, c.itemsBox);
+
             return {
               ...c,
               activeCharacters: c.activeCharacters.filter(ac => ac.character.id !== characterId),
+              itemsBox: newItemsBox,
             };
           }),
         })),

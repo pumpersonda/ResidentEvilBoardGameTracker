@@ -11,6 +11,16 @@ import { Droplet, Pencil, Plus, Trash2 } from 'lucide-react-native';
 import { SelectCharacterModal } from './SelectCharacterModal';
 import { EditCharacterModal } from './EditCharacterModal';
 import { CharacterDetailsModal } from './CharacterDetailsModal';
+import {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from '@/components/ui/alert-dialog';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Toast, ToastDescription, ToastTitle, useToast } from '@/components/ui/toast';
 
 interface CharactersTabProps {
   campaign: Campaign;
@@ -20,12 +30,37 @@ export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [editingCharacterId, setEditingCharacterId] = useState<string | null>(null);
   const [viewingCharacterId, setViewingCharacterId] = useState<string | null>(null);
+  const [characterPendingRemoval, setCharacterPendingRemoval] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const removeActiveCharacter = useCampaignStore(state => state.removeActiveCharacter);
+  const toast = useToast();
 
   const editingCharacter: ActiveCharacter | null =
     campaign.activeCharacters.find(ac => ac.character.id === editingCharacterId) ?? null;
   const viewingCharacter: ActiveCharacter | null =
     campaign.activeCharacters.find(ac => ac.character.id === viewingCharacterId) ?? null;
+
+  const handleRequestRemoveCharacter = (id: string, name: string) => {
+    setCharacterPendingRemoval({ id, name });
+  };
+
+  const handleConfirmRemoveCharacter = () => {
+    if (!characterPendingRemoval) return;
+    const { id, name } = characterPendingRemoval;
+    removeActiveCharacter(id);
+    setCharacterPendingRemoval(null);
+    toast.show({
+      placement: 'top',
+      render: ({ id: toastId }) => (
+        <Toast nativeID={`toast-${toastId}`} action="muted" variant="solid">
+          <ToastTitle className="font-semibold text-success">Character removed</ToastTitle>
+          <ToastDescription size="sm">{`"${name}" has been removed from the campaign.`}</ToastDescription>
+        </Toast>
+      ),
+    });
+  };
 
   const hasActiveCharacters = campaign.activeCharacters.length > 0;
   const hasReserveCharacters = campaign.reserveCharacters.length > 0;
@@ -105,7 +140,12 @@ export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
                             <Pencil color="gray" size={20} />
                           </Pressable>
                           <Pressable
-                            onPress={() => removeActiveCharacter(activeCharacter.character.id)}
+                            onPress={() =>
+                              handleRequestRemoveCharacter(
+                                activeCharacter.character.id,
+                                activeCharacter.character.name
+                              )
+                            }
                             className="px-3 rounded-full active:bg-destructive/10"
                             accessibilityLabel="Remove character"
                           >
@@ -166,6 +206,38 @@ export const CharactersTab: React.FC<CharactersTabProps> = ({ campaign }) => {
         campaign={campaign}
         activeCharacter={viewingCharacter}
       />
+
+      <AlertDialog
+        isOpen={characterPendingRemoval !== null}
+        onClose={() => setCharacterPendingRemoval(null)}
+      >
+        <AlertDialogBackdrop />
+        <AlertDialogContent className="bg-card">
+          <AlertDialogHeader>
+            <Text className="text-foreground text-xl font-semibold">Remove character</Text>
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            <Text className="text-muted-foreground">
+              {`Remove "${characterPendingRemoval?.name}" from the campaign? This cannot be undone.`}
+            </Text>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button
+              variant="outline"
+              className="flex-1 border-border"
+              onPress={() => setCharacterPendingRemoval(null)}
+            >
+              <ButtonText className="text-muted-foreground">Cancel</ButtonText>
+            </Button>
+            <Button
+              className="flex-1 bg-destructive active:opacity-90"
+              onPress={handleConfirmRemoveCharacter}
+            >
+              <ButtonText>Remove</ButtonText>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </VStack>
   );
 };
