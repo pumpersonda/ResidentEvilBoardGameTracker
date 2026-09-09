@@ -226,10 +226,7 @@ export const ItemBoxTab: React.FC<ItemBoxTabProps> = ({ campaign }) => {
         onAddItem={handleAddItem}
       />
 
-      <AlertDialog
-        isOpen={itemPendingRemoval !== null}
-        onClose={() => setItemPendingRemoval(null)}
-      >
+      <AlertDialog isOpen={itemPendingRemoval !== null} onClose={() => setItemPendingRemoval(null)}>
         <AlertDialogBackdrop />
         <AlertDialogContent className="bg-card">
           <AlertDialogHeader>

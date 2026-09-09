@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
@@ -12,7 +12,11 @@ import { Campaign } from '@/types';
 import { useCampaignStore } from '@/store/campaignStore';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
-import { DANGER_LEVEL_CONFIG, getDangerLevelColor, getDangerRingColor } from '@/constants/dangerLevel';
+import {
+  DANGER_LEVEL_CONFIG,
+  getDangerLevelColor,
+  getDangerRingColor,
+} from '@/constants/dangerLevel';
 import { DangerRing } from './DangerRing';
 import { angleFromPoint, angleToValue, valueToThumbOffset } from '@/utils/dangerLevelGeometry';
 
@@ -37,10 +41,12 @@ export const DangerLevelModal: React.FC<DangerLevelModalProps> = ({
 
   const [liveValue, setLiveValue] = useState(campaign.dangerLevel);
   const [isDragging, setIsDragging] = useState(false);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
-  useEffect(() => {
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) setLiveValue(campaign.dangerLevel);
-  }, [isOpen, campaign.dangerLevel]);
+  }
 
   if (!config) return null;
 

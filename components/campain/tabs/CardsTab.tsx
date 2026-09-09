@@ -73,9 +73,7 @@ export const CardsTab: React.FC<CardsTabProps> = ({ campaign }) => {
             {mode === 'added' ? 'Card added' : 'Card discarded'}
           </ToastTitle>
           <ToastDescription size="sm">
-            {mode === 'added'
-              ? `"${card.name}" was added.`
-              : `"${card.name}" was discarded.`}
+            {mode === 'added' ? `"${card.name}" was added.` : `"${card.name}" was discarded.`}
           </ToastDescription>
         </Toast>
       ),
@@ -167,9 +165,7 @@ export const CardsTab: React.FC<CardsTabProps> = ({ campaign }) => {
                           x{card.quantity}
                         </Text>
                         <Pressable
-                          onPress={() =>
-                            handleRequestDeleteCard(cardType, card.id, resolved.name)
-                          }
+                          onPress={() => handleRequestDeleteCard(cardType, card.id, resolved.name)}
                           className="px-3 rounded-full active:bg-destructive/10"
                           accessibilityLabel="Eliminar carta"
                         >
@@ -222,10 +218,7 @@ export const CardsTab: React.FC<CardsTabProps> = ({ campaign }) => {
 
       <CardsInfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
 
-      <AlertDialog
-        isOpen={cardPendingRemoval !== null}
-        onClose={() => setCardPendingRemoval(null)}
-      >
+      <AlertDialog isOpen={cardPendingRemoval !== null} onClose={() => setCardPendingRemoval(null)}>
         <AlertDialogBackdrop />
         <AlertDialogContent className="bg-card">
           <AlertDialogHeader>
