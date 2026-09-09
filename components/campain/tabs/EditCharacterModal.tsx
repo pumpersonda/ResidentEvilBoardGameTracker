@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { View } from 'react-native';
 import {
   Modal,
   ModalBackdrop,
@@ -9,17 +10,27 @@ import {
   ModalHeader,
 } from '@/components/ui/modal';
 import { Button, ButtonText } from '@/components/ui/button';
+import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from '@/components/ui/checkbox';
 import { Pressable } from '@/components/ui/pressable';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Input, InputField } from '@/components/ui/input';
-import { Plus, X } from 'lucide-react-native';
-import { ActiveCharacter, Campaign } from '@/types';
+import { Check, Droplet, Plus, X } from 'lucide-react-native';
+import {
+  ActiveCharacter,
+  Campaign,
+  getHealthColor,
+  HealthValue,
+  HEALTH_LABELS,
+  KEROSENE_COLOR,
+  KEROSENE_MAX,
+} from '@/types';
 import { useCampaignStore } from '@/store/campaignStore';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
 import { AssignItemModal } from './AssignItemModal';
+import { PipTrack } from './PipTrack';
 
 interface EditCharacterModalProps {
   isOpen: boolean;
@@ -37,6 +48,10 @@ export const EditCharacterModal: React.FC<EditCharacterModalProps> = ({
   const resolvedTheme = useResolvedTheme();
   const updateActiveCharacterPlayerName = useCampaignStore(
     state => state.updateActiveCharacterPlayerName
+  );
+  const updateActiveCharacterHealth = useCampaignStore(state => state.updateActiveCharacterHealth);
+  const updateActiveCharacterKerosene = useCampaignStore(
+    state => state.updateActiveCharacterKerosene
   );
   const removeItemFromActiveCharacter = useCampaignStore(
     state => state.removeItemFromActiveCharacter
@@ -69,6 +84,20 @@ export const EditCharacterModal: React.FC<EditCharacterModalProps> = ({
     removeItemFromActiveCharacter(characterId, itemId, 1);
     addItemToBox({ ...item, quantity: 1 });
   };
+
+  const handleHealthChange = (value: number) => {
+    updateActiveCharacterHealth(characterId, {
+      ...activeCharacter.health,
+      value: value as HealthValue,
+    });
+  };
+
+  const handleTogglePoisoned = (isPoisoned: boolean) => {
+    updateActiveCharacterHealth(characterId, { ...activeCharacter.health, isPoisoned });
+  };
+
+  const healthColor = getHealthColor(activeCharacter.health);
+  const mutedIconColor = THEME_COLORS[resolvedTheme].mutedForeground;
 
   return (
     <>
@@ -103,6 +132,64 @@ export const EditCharacterModal: React.FC<EditCharacterModalProps> = ({
                   />
                 </Input>
               </VStack>
+
+              <VStack space="sm">
+                <HStack className="items-center justify-between">
+                  <Text className="text-foreground font-semibold">Health</Text>
+                  <Text className="text-sm font-medium" style={{ color: healthColor }}>
+                    {HEALTH_LABELS[activeCharacter.health.value]}
+                  </Text>
+                </HStack>
+                <PipTrack
+                  length={5}
+                  value={activeCharacter.health.value}
+                  onChange={handleHealthChange}
+                  accessibilityLabel="Health"
+                  renderPip={filled => (
+                    <View
+                      className="w-7 h-7 rounded-full border border-border"
+                      style={filled ? { backgroundColor: healthColor, borderColor: healthColor } : undefined}
+                    />
+                  )}
+                />
+                <Checkbox
+                  value="poisoned"
+                  isChecked={activeCharacter.health.isPoisoned}
+                  onChange={handleTogglePoisoned}
+                >
+                  <CheckboxIndicator>
+                    <CheckboxIcon as={Check} />
+                  </CheckboxIndicator>
+                  <CheckboxLabel>Poisoned</CheckboxLabel>
+                </Checkbox>
+              </VStack>
+
+              {activeCharacter.kerosene !== undefined && (
+                <VStack space="sm">
+                  <HStack className="items-center justify-between">
+                    <HStack space="xs" className="items-center">
+                      <Droplet color={KEROSENE_COLOR} size={18} />
+                      <Text className="text-foreground font-semibold">Kerosene</Text>
+                    </HStack>
+                    <Text className="text-muted-foreground text-sm">
+                      {activeCharacter.kerosene}/{KEROSENE_MAX}
+                    </Text>
+                  </HStack>
+                  <PipTrack
+                    length={KEROSENE_MAX}
+                    value={activeCharacter.kerosene}
+                    onChange={value => updateActiveCharacterKerosene(characterId, value)}
+                    accessibilityLabel="Kerosene"
+                    renderPip={filled => (
+                      <Droplet
+                        color={filled ? KEROSENE_COLOR : mutedIconColor}
+                        fill={filled ? KEROSENE_COLOR : 'none'}
+                        size={20}
+                      />
+                    )}
+                  />
+                </VStack>
+              )}
 
               <VStack space="sm">
                 <HStack className="items-center justify-between">

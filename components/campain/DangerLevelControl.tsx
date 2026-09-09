@@ -1,52 +1,49 @@
-import React from 'react';
-import { VStack } from '@/components/ui/vstack';
-import { HStack } from '@/components/ui/hstack';
-import { Text } from '@/components/ui/text';
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@/components/ui/slider';
+import React, { useState } from 'react';
+import { Pressable } from '@/components/ui/pressable';
 import { Campaign } from '@/types';
-import { useCampaignStore } from '@/store/campaignStore';
-import {
-  DANGER_LEVEL_BADGE_CLASSES,
-  DANGER_LEVEL_CONFIG,
-  DANGER_LEVEL_TRACK_CLASSES,
-  getDangerLevelColor,
-} from '@/constants/dangerLevel';
+import { useResolvedTheme } from '@/hooks/useResolvedTheme';
+import { THEME_COLORS } from '@/constants/theme';
+import { DANGER_LEVEL_CONFIG, getDangerLevelColor, getDangerRingColor } from '@/constants/dangerLevel';
+import { DangerRing } from '@/components/campain/dangerLevel/DangerRing';
+import { DangerLevelModal } from '@/components/campain/dangerLevel/DangerLevelModal';
 
 interface DangerLevelControlProps {
   campaign: Campaign;
 }
 
+const COMPACT_SIZE = 88;
+const COMPACT_STROKE = 8;
+
 // RE2 has no danger level dial; renders nothing when no config exists for the game version.
 export const DangerLevelControl: React.FC<DangerLevelControlProps> = ({ campaign }) => {
-  const setDangerLevel = useCampaignStore(state => state.setDangerLevel);
+  const [isOpen, setIsOpen] = useState(false);
+  const resolvedTheme = useResolvedTheme();
   const config = DANGER_LEVEL_CONFIG[campaign.game];
 
   if (!config) return null;
 
   const color = getDangerLevelColor(campaign.game, campaign.dangerLevel) ?? 'Green';
+  const ringColor = getDangerRingColor(color, resolvedTheme);
+  const trackColor = THEME_COLORS[resolvedTheme].track;
 
   return (
-    <VStack space="xs" className="pt-1">
-      <HStack className="justify-between items-center">
-        <Text className="text-muted-foreground text-sm">Danger Level</Text>
-        <Text
-          className={`text-sm font-semibold px-2 py-0.5 border rounded-full ${DANGER_LEVEL_BADGE_CLASSES[color]}`}
-        >
-          {campaign.dangerLevel}
-        </Text>
-      </HStack>
-      <Slider
-        value={campaign.dangerLevel}
-        minValue={0}
-        maxValue={config.maxLevel}
-        step={1}
-        onChange={value => setDangerLevel(value)}
+    <>
+      <Pressable
+        onPress={() => setIsOpen(true)}
+        accessibilityRole="button"
+        accessibilityLabel={`Danger level ${campaign.dangerLevel} of ${config.maxLevel}. Tap to adjust.`}
+        className="pt-2 active:opacity-80"
       >
-        <SliderTrack>
-          <SliderFilledTrack className={DANGER_LEVEL_TRACK_CLASSES[color]} />
-        </SliderTrack>
-        <SliderThumb />
-      </Slider>
-    </VStack>
+        <DangerRing
+          value={campaign.dangerLevel}
+          max={config.maxLevel}
+          size={COMPACT_SIZE}
+          strokeWidth={COMPACT_STROKE}
+          color={ringColor}
+          trackColor={trackColor}
+        />
+      </Pressable>
+      <DangerLevelModal campaign={campaign} isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </>
   );
 };

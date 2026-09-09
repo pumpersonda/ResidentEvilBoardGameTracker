@@ -18,6 +18,7 @@ import { Campaign } from '@/types';
 import { useCampaignStore } from '@/store/campaignStore';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
+import { Toast, ToastDescription, ToastTitle, useToast } from '@/components/ui/toast';
 
 interface AssignItemModalProps {
   isOpen: boolean;
@@ -36,6 +37,7 @@ export const AssignItemModal: React.FC<AssignItemModalProps> = ({
   const [query, setQuery] = useState('');
   const removeFromItemsBox = useCampaignStore(state => state.removeFromItemsBox);
   const addItemToActiveCharacter = useCampaignStore(state => state.addItemToActiveCharacter);
+  const toast = useToast();
 
   const normalizedQuery = query.trim().toLowerCase();
   const visibleItems = useMemo(() => {
@@ -53,6 +55,24 @@ export const AssignItemModal: React.FC<AssignItemModalProps> = ({
     if (!item) return;
     removeFromItemsBox(item.id, 1);
     addItemToActiveCharacter(characterId, { ...item, quantity: 1 });
+
+    const characterName = campaign.activeCharacters.find(
+      ac => ac.character.id === characterId
+    )?.character.name;
+
+    toast.show({
+      placement: 'top',
+      render: ({ id }) => (
+        <Toast nativeID={`toast-${id}`} action="success" variant="solid">
+          <ToastTitle className="font-semibold text-success">Item assigned</ToastTitle>
+          <ToastDescription size="sm">
+            {characterName
+              ? `"${item.name}" was assigned to ${characterName}.`
+              : `"${item.name}" was assigned.`}
+          </ToastDescription>
+        </Toast>
+      ),
+    });
   };
 
   return (

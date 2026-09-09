@@ -49,6 +49,15 @@ export interface CharacterHealth {
   isPoisoned: boolean;
 }
 
+export const POISONED_HEALTH_COLOR = '#a855f7';
+
+export function getHealthColor(health: CharacterHealth): string {
+  return health.isPoisoned ? POISONED_HEALTH_COLOR : HEALTH_COLORS[health.value];
+}
+
+export const KEROSENE_MAX = 10;
+export const KEROSENE_COLOR = 'gray';
+
 // ==================== ENUMS ====================
 export enum ItemType {
   Weapon = 'weapon',

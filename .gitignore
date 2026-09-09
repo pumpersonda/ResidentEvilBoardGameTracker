@@ -46,3 +46,5 @@ attachments/
 *.pdf
 .agents
 .claude
+# Brainstorming visual companion sessions
+.superpowers/

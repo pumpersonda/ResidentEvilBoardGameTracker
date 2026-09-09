@@ -18,7 +18,10 @@ import {
 import { Campaign, GameExpansion, Scenario } from '@/types';
 import { useCampaignStore } from '@/store/campaignStore';
 import { getGameScenarios } from '@/data';
-import { Check, Lock } from 'lucide-react-native';
+import { Check, Info, Lock } from 'lucide-react-native';
+import { THEME_COLORS } from '@/constants/theme';
+import { useResolvedTheme } from '@/hooks/useResolvedTheme';
+import NavigationInfoModal from '@/components/campain/NavigationInfoModal';
 
 interface ScenariosTabProps {
   campaign: Campaign;
@@ -35,7 +38,9 @@ export const ScenariosTab: React.FC<ScenariosTabProps> = ({ campaign }) => {
   const updateScenarioStatus = useCampaignStore(state => state.updateScenarioStatus);
   const unlockScenario = useCampaignStore(state => state.unlockScenario);
   const toggleExpansion = useCampaignStore(state => state.toggleExpansion);
+  const resolvedTheme = useResolvedTheme();
   const [scenarioPendingUnlock, setScenarioPendingUnlock] = useState<Scenario | null>(null);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   const lockStatusById = useMemo(() => {
     const map = new Map<string, string>();
@@ -73,6 +78,16 @@ export const ScenariosTab: React.FC<ScenariosTabProps> = ({ campaign }) => {
   return (
     <VStack className="flex-1">
       <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
+        <HStack space="sm" className="mb-2 justify-between">
+          <Text className="text-muted-foreground text-sm font-semibold">Info</Text>
+          <Pressable
+            onPress={() => setIsInfoOpen(true)}
+            className="p-2 rounded-full bg-secondary active:opacity-80"
+            accessibilityLabel="Navigation information"
+          >
+            <Info color={THEME_COLORS[resolvedTheme].foreground} size={20} />
+          </Pressable>
+        </HStack>
         {availableExpansions.length > 0 && (
           <VStack space="sm" className="pb-4 mb-2 border-b border-border">
             {availableExpansions.map(expansion => (
@@ -151,7 +166,7 @@ export const ScenariosTab: React.FC<ScenariosTabProps> = ({ campaign }) => {
           </VStack>
         )}
       </ScrollView>
-
+      <NavigationInfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
       <AlertDialog
         isOpen={scenarioPendingUnlock !== null}
         onClose={() => setScenarioPendingUnlock(null)}

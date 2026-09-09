@@ -10,12 +10,14 @@ import {
   GameExpansion,
   GameVersion,
   Item,
+  KEROSENE_MAX,
   Scenario,
   ScenarioStatus,
 } from '@/types';
 import { CharacterProfile } from '@/data/RE1/characters';
 import { CreateCampaignForm } from '@/components/screens/CreateCampaignModal';
 import { getGameScenarios } from '@/data';
+import { DANGER_LEVEL_CONFIG } from '@/constants/dangerLevel';
 
 interface CampaignStore {
   currentCampaignId: string | null;
@@ -34,6 +36,7 @@ interface CampaignStore {
   unlockScenario: (scenarioId: string) => void;
   toggleExpansion: (expansion: Exclude<GameExpansion, 'Core Box'>) => void;
   updateActiveCharacterHealth: (characterId: string, health: CharacterHealth) => void;
+  updateActiveCharacterKerosene: (characterId: string, kerosene: number) => void;
   addActiveCharacter: (activeCharacter: ActiveCharacter) => void;
   removeActiveCharacter: (characterId: string) => void;
   moveCharacterToReserve: (characterId: string) => void;
@@ -111,9 +114,11 @@ export const useCampaignStore = create<CampaignStore>()(
 
       setDangerLevel: level =>
         set(state => ({
-          allCampaigns: state.allCampaigns.map(c =>
-            c.id === state.currentCampaignId ? { ...c, dangerLevel: level } : c
-          ),
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            const maxLevel = DANGER_LEVEL_CONFIG[c.game]?.maxLevel ?? level;
+            return { ...c, dangerLevel: Math.max(0, Math.min(level, maxLevel)) };
+          }),
         })),
 
       updateScenarioStatus: (scenarioId, status) =>
@@ -167,6 +172,21 @@ export const useCampaignStore = create<CampaignStore>()(
           }),
         })),
 
+      updateActiveCharacterKerosene: (characterId, kerosene) =>
+        set(state => ({
+          allCampaigns: state.allCampaigns.map(c => {
+            if (c.id !== state.currentCampaignId) return c;
+            return {
+              ...c,
+              activeCharacters: c.activeCharacters.map(ac =>
+                ac.character.id === characterId
+                  ? { ...ac, kerosene: Math.min(KEROSENE_MAX, Math.max(0, kerosene)) }
+                  : ac
+              ),
+            };
+          }),
+        })),
+
       addActiveCharacter: activeCharacter =>
         set(state => ({
           allCampaigns: state.allCampaigns.map(c => {
@@ -182,9 +202,24 @@ export const useCampaignStore = create<CampaignStore>()(
         set(state => ({
           allCampaigns: state.allCampaigns.map(c => {
             if (c.id !== state.currentCampaignId) return c;
+            const characterToRemove = c.activeCharacters.find(
+              ac => ac.character.id === characterId
+            );
+            if (!characterToRemove) return c;
+
+            const newItemsBox = characterToRemove.inventory.reduce((box, item) => {
+              const existingItem = box.find(i => i.id === item.id);
+              return existingItem
+                ? box.map(i =>
+                    i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+                  )
+                : [...box, item];
+            }, c.itemsBox);
+
             return {
               ...c,
               activeCharacters: c.activeCharacters.filter(ac => ac.character.id !== characterId),
+              itemsBox: newItemsBox,
             };
           }),
         })),
