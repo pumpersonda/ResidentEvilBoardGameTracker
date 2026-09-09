@@ -56,9 +56,8 @@ export const AssignItemModal: React.FC<AssignItemModalProps> = ({
     removeFromItemsBox(item.id, 1);
     addItemToActiveCharacter(characterId, { ...item, quantity: 1 });
 
-    const characterName = campaign.activeCharacters.find(
-      ac => ac.character.id === characterId
-    )?.character.name;
+    const characterName = campaign.activeCharacters.find(ac => ac.character.id === characterId)
+      ?.character.name;
 
     toast.show({
       placement: 'top',

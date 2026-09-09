@@ -83,9 +83,7 @@ export const DangerRing: React.FC<DangerRingProps> = ({
           >
             {value}
           </Text>
-          <Text className="text-muted-foreground text-[10px] uppercase tracking-wide">
-            Danger
-          </Text>
+          <Text className="text-muted-foreground text-[10px] uppercase tracking-wide">Danger</Text>
         </View>
       )}
     </View>

@@ -3,7 +3,11 @@ import { Pressable } from '@/components/ui/pressable';
 import { Campaign } from '@/types';
 import { useResolvedTheme } from '@/hooks/useResolvedTheme';
 import { THEME_COLORS } from '@/constants/theme';
-import { DANGER_LEVEL_CONFIG, getDangerLevelColor, getDangerRingColor } from '@/constants/dangerLevel';
+import {
+  DANGER_LEVEL_CONFIG,
+  getDangerLevelColor,
+  getDangerRingColor,
+} from '@/constants/dangerLevel';
 import { DangerRing } from '@/components/campain/dangerLevel/DangerRing';
 import { DangerLevelModal } from '@/components/campain/dangerLevel/DangerLevelModal';
 

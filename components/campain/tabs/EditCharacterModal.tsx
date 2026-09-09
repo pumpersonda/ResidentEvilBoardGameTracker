@@ -148,7 +148,11 @@ export const EditCharacterModal: React.FC<EditCharacterModalProps> = ({
                   renderPip={filled => (
                     <View
                       className="w-7 h-7 rounded-full border border-border"
-                      style={filled ? { backgroundColor: healthColor, borderColor: healthColor } : undefined}
+                      style={
+                        filled
+                          ? { backgroundColor: healthColor, borderColor: healthColor }
+                          : undefined
+                      }
                     />
                   )}
                 />
